@@ -2,7 +2,8 @@ package com.example.starkfuturetest.domain.usecase
 
 import com.example.starkfuturetest.core.result.AppResult
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
+import kotlinx.coroutines.flow.Flow
 
 interface GetTelemetrySnapshotUseCase {
-    suspend operator fun invoke(): AppResult<TelemetrySnapshot>
+    operator fun invoke(): Flow<AppResult<TelemetrySnapshot>>
 }

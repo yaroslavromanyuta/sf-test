@@ -10,8 +10,9 @@ class AssetTelemetrySnapshotDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dispatcherProvider: DispatcherProvider,
 ) : TelemetrySnapshotDataSource {
-    override suspend fun getTelemetrySnapshotJson(): String =
+
+    override suspend fun getTelemetrySnapshotJson(fileName: String): String =
         withContext(dispatcherProvider.io) {
-            context.assets.open("telemetry_snapshot.json").bufferedReader().use { it.readText() }
+            context.assets.open(fileName).bufferedReader().use { it.readText() }
         }
 }

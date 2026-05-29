@@ -9,6 +9,7 @@ import com.example.starkfuturetest.core.result.AppResult
 import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,32 +35,35 @@ class TelemetryDashboardViewModel @Inject constructor(
     )
     val expandedSections: StateFlow<Set<TelemetrySectionId>> = _expandedSections.asStateFlow()
 
+    private var telemetryJob: Job? = null
+
     init {
-        loadTelemetry()
+        collectTelemetry()
     }
 
     fun onAction(action: TelemetryDashboardAction) {
         when (action) {
-            is TelemetryDashboardAction.Retry -> loadTelemetry()
+            is TelemetryDashboardAction.Retry -> collectTelemetry()
             is TelemetryDashboardAction.ToggleSection -> toggleSection(action.sectionId)
             is TelemetryDashboardAction.ChangeTheme -> _themeMode.value = action.themeMode
         }
     }
 
-    private fun loadTelemetry() {
+    private fun collectTelemetry() {
+        telemetryJob?.cancel()
         _uiState.value = TelemetryDashboardUiState.Loading
-        viewModelScope.launch {
-            when (val result = getTelemetrySnapshotUseCase()) {
-                is AppResult.Success -> {
-                    val snapshot = result.data
-                    _uiState.value = if (snapshot.bike.model.isBlank()) {
-                        TelemetryDashboardUiState.Empty
-                    } else {
-                        TelemetryDashboardUiState.Content(uiMapper.map(snapshot))
+        telemetryJob = viewModelScope.launch {
+            getTelemetrySnapshotUseCase().collect { result ->
+                _uiState.value = when (result) {
+                    is AppResult.Success -> {
+                        val snapshot = result.data
+                        if (snapshot.bike.model.isBlank()) {
+                            TelemetryDashboardUiState.Empty
+                        } else {
+                            TelemetryDashboardUiState.Content(uiMapper.map(snapshot))
+                        }
                     }
-                }
-                is AppResult.Error -> {
-                    _uiState.value = TelemetryDashboardUiState.Error(errorMessage(result.error))
+                    is AppResult.Error -> TelemetryDashboardUiState.Error(errorMessage(result.error))
                 }
             }
         }
