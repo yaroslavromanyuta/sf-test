@@ -40,9 +40,7 @@
     <string name="metric_avg_speed">Avg Speed</string>
 
     <!-- Warning banner -->
-    <string name="warning_healthy_label">Healthy · No active warnings</string>
     <string name="cd_warning_icon">Warning</string>
-    <string name="cd_no_warnings_icon">No active warnings</string>
 
     <!-- Theme switcher -->
     <string name="theme_system">System</string>

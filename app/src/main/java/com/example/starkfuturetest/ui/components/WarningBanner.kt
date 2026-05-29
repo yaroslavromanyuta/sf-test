@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,9 +29,7 @@ fun WarningBanner(
     warnings: List<WarningUiModel>,
     modifier: Modifier = Modifier,
 ) {
-    if (warnings.isEmpty()) {
-        HealthyBanner(modifier = modifier)
-    } else {
+    if (warnings.isNotEmpty()) {
         Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(StarkSpacing.sm)) {
             warnings.forEach { SingleWarningBanner(it) }
         }
@@ -61,32 +58,6 @@ private fun SingleWarningBanner(warning: WarningUiModel) {
             text = warning.message,
             style = MaterialTheme.typography.titleMedium,
             color = StarkColors.WarningAmber,
-        )
-    }
-}
-
-@Composable
-private fun HealthyBanner(modifier: Modifier = Modifier) {
-    val shape = RoundedCornerShape(StarkSpacing.sm)
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(color = StarkColors.SuccessGreen.copy(alpha = 0.1f), shape = shape)
-            .border(width = 1.dp, color = StarkColors.SuccessGreen.copy(alpha = 0.3f), shape = shape)
-            .padding(StarkSpacing.md),
-        horizontalArrangement = Arrangement.spacedBy(StarkSpacing.md),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.CheckCircle,
-            contentDescription = stringResource(R.string.cd_no_warnings_icon),
-            tint = StarkColors.SuccessGreen,
-            modifier = Modifier.size(20.dp),
-        )
-        Text(
-            text = stringResource(R.string.warning_healthy_label),
-            style = MaterialTheme.typography.titleMedium,
-            color = StarkColors.SuccessGreen,
         )
     }
 }

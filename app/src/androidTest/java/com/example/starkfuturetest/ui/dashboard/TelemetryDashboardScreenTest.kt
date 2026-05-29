@@ -103,9 +103,9 @@ class TelemetryDashboardScreenTest {
     }
 
     @Test
-    fun healthyBannerShownWhenNoWarnings() {
+    fun warningBannerHiddenWhenNoWarnings() {
         setContent(uiModel = fakeUiModel.copy(warnings = emptyList()))
-        composeTestRule.onNodeWithText("Healthy · No active warnings").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Motor temperature elevated").assertDoesNotExist()
     }
 
     @Test
