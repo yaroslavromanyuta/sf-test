@@ -1,3 +1,3 @@
 package com.example.starkfuturetest.presentation.dashboard
 
-enum class TelemetrySectionId { Battery, Performance, RideSettings, Session, Warnings, FaultCodes }
+enum class TelemetrySectionId { Battery, RideSettings, Session, Warnings, FaultCodes }

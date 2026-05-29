@@ -37,6 +37,7 @@ import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.ui.components.BatteryProgressIndicator
 import com.example.starkfuturetest.ui.components.BikeHeaderCard
 import com.example.starkfuturetest.ui.components.ExpandableTelemetrySection
+import com.example.starkfuturetest.ui.components.StaticTelemetrySection
 import com.example.starkfuturetest.ui.components.MetricTile
 import com.example.starkfuturetest.ui.components.StatusChip
 import com.example.starkfuturetest.ui.components.ThemeSwitcher
@@ -167,7 +168,7 @@ fun TelemetryDashboardScreen(
             }
 
             item {
-                ExpandableTelemetrySection(
+                StaticTelemetrySection(
                     title = stringResource(R.string.section_performance),
                     icon = {
                         Icon(
@@ -176,9 +177,7 @@ fun TelemetryDashboardScreen(
                             tint = MaterialTheme.colorScheme.primary,
                         )
                     },
-                    isExpanded = TelemetrySectionId.Performance in expandedSections,
-                    onToggle = { onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.Performance)) },
-                    compactContent = {
+                    content = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
@@ -195,7 +194,6 @@ fun TelemetryDashboardScreen(
                             )
                         }
                     },
-                    expandedContent = {},
                 )
             }
 

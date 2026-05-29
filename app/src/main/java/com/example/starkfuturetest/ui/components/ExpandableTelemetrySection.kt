@@ -29,6 +29,31 @@ import com.example.starkfuturetest.R
 import com.example.starkfuturetest.ui.theme.StarkSpacing
 
 @Composable
+fun StaticTelemetrySection(
+    title: String,
+    icon: @Composable () -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TelemetryCard(modifier = modifier) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            icon()
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+        Spacer(modifier = Modifier.height(StarkSpacing.md))
+        content()
+    }
+}
+
+@Composable
 fun ExpandableTelemetrySection(
     title: String,
     icon: @Composable () -> Unit,
