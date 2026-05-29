@@ -7,5 +7,6 @@ interface TelemetryValueFormatter {
     fun formatPower(hp: Double): String
     fun formatTemperature(celsius: Double): String
     fun formatDistance(km: Double): String
+    fun formatRange(km: Int): String
     fun formatPercentage(value: Int): String
 }

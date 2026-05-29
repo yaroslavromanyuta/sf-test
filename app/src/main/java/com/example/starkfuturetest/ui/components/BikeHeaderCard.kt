@@ -21,9 +21,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.starkfuturetest.R
 import com.example.starkfuturetest.ui.theme.StarkSpacing
 
 @Composable
@@ -48,7 +50,7 @@ fun BikeHeaderCard(
                 .data(imageUrl)
                 .crossfade(true)
                 .build(),
-            contentDescription = "$model motorcycle",
+            contentDescription = stringResource(R.string.cd_bike_image, model),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
         )
@@ -70,7 +72,7 @@ fun BikeHeaderCard(
                 .padding(StarkSpacing.cardPadding),
         ) {
             Text(
-                text = "$variant · FW: $firmwareVersion",
+                text = stringResource(R.string.bike_header_variant_fw, variant, firmwareVersion),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

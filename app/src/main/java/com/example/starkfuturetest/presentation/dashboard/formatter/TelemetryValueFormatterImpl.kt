@@ -1,8 +1,12 @@
 package com.example.starkfuturetest.presentation.dashboard.formatter
 
+import com.example.starkfuturetest.R
+import com.example.starkfuturetest.core.resources.ResourcesRepository
 import javax.inject.Inject
 
-class TelemetryValueFormatterImpl @Inject constructor() : TelemetryValueFormatter {
+class TelemetryValueFormatterImpl @Inject constructor(
+    private val resources: ResourcesRepository,
+) : TelemetryValueFormatter {
 
     override fun formatTimestamp(isoTimestamp: String): String =
         try {
@@ -14,13 +18,21 @@ class TelemetryValueFormatterImpl @Inject constructor() : TelemetryValueFormatte
     override fun formatPowerMap(powerMap: String): String =
         powerMap.replaceFirstChar { it.uppercaseChar() }
 
-    override fun formatSpeed(kmh: Double): String = "%.1f km/h".format(kmh)
+    override fun formatSpeed(kmh: Double): String =
+        resources.getString(R.string.format_speed_kmh, kmh)
 
-    override fun formatPower(hp: Double): String = "%.1f hp".format(hp)
+    override fun formatPower(hp: Double): String =
+        resources.getString(R.string.format_power_hp, hp)
 
-    override fun formatTemperature(celsius: Double): String = "%.1f°C".format(celsius)
+    override fun formatTemperature(celsius: Double): String =
+        resources.getString(R.string.format_temperature_c, celsius)
 
-    override fun formatDistance(km: Double): String = "%.1f km".format(km)
+    override fun formatDistance(km: Double): String =
+        resources.getString(R.string.format_distance_km, km)
 
-    override fun formatPercentage(value: Int): String = "$value%"
+    override fun formatRange(km: Int): String =
+        resources.getString(R.string.format_range_km, km)
+
+    override fun formatPercentage(value: Int): String =
+        resources.getString(R.string.format_percentage, value)
 }

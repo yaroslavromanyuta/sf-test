@@ -1,3 +1,75 @@
 <resources>
     <string name="app_name">Stark Future Test</string>
+
+    <!-- Dashboard top bar -->
+    <string name="dashboard_title">Telemetry</string>
+
+    <!-- Loading state -->
+    <string name="loading_message">Loading telemetry…</string>
+
+    <!-- Error state -->
+    <string name="error_title">Failed to load telemetry</string>
+    <string name="error_body">%1$s</string>
+    <string name="error_retry">Retry</string>
+
+    <!-- Empty state -->
+    <string name="empty_title">No telemetry data</string>
+    <string name="empty_body">The snapshot contains no readable telemetry.</string>
+
+    <!-- Section titles -->
+    <string name="section_battery">Battery</string>
+    <string name="section_performance">Performance</string>
+    <string name="section_ride_settings">Ride Settings</string>
+    <string name="section_session">Session</string>
+    <string name="section_warnings">Warnings</string>
+
+    <!-- Metric labels -->
+    <string name="metric_estimated_range">Estimated Range</string>
+    <string name="metric_temperature">Temperature</string>
+    <string name="metric_state">State</string>
+    <string name="metric_power">Power</string>
+    <string name="metric_motor_temp">Motor Temp</string>
+    <string name="metric_power_map">Power Map</string>
+    <string name="metric_max_power">Max Power</string>
+    <string name="metric_engine_braking">Engine Braking</string>
+    <string name="metric_regen">Regen</string>
+    <string name="metric_duration">Duration</string>
+    <string name="metric_distance">Distance</string>
+    <string name="metric_max_speed">Max Speed</string>
+    <string name="metric_avg_speed">Avg Speed</string>
+
+    <!-- Warning banner -->
+    <string name="warning_healthy_label">Healthy · No active warnings</string>
+    <string name="cd_warning_icon">Warning</string>
+    <string name="cd_no_warnings_icon">No active warnings</string>
+
+    <!-- Theme switcher -->
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="cd_theme_option">%1$s theme</string>
+
+    <!-- Content descriptions with format args -->
+    <string name="cd_bike_image">%1$s motorcycle</string>
+    <string name="bike_header_variant_fw">%1$s · FW: %2$s</string>
+    <string name="cd_section_collapse">Collapse %1$s</string>
+    <string name="cd_section_expand">Expand %1$s</string>
+
+    <!-- ViewModel error messages -->
+    <string name="error_message_empty_data">No telemetry data available</string>
+    <string name="error_message_parse_error">Failed to parse telemetry snapshot</string>
+    <string name="error_message_asset_read">Could not read telemetry data</string>
+    <string name="error_message_unknown">An unexpected error occurred</string>
+
+    <!-- Formatter: duration -->
+    <string name="format_duration_hm">%1$dh %2$sm</string>
+    <string name="format_duration_m">%1$dm</string>
+
+    <!-- Formatter: value units -->
+    <string name="format_speed_kmh">%1$.1f km/h</string>
+    <string name="format_power_hp">%1$.1f hp</string>
+    <string name="format_temperature_c">%1$.1f°C</string>
+    <string name="format_distance_km">%1$.1f km</string>
+    <string name="format_range_km">%1$d km</string>
+    <string name="format_percentage">%1$d%%</string>
 </resources>

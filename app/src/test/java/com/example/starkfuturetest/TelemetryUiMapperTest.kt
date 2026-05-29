@@ -1,5 +1,6 @@
 package com.example.starkfuturetest
 
+import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.domain.logic.AverageSpeedCalculatorImpl
 import com.example.starkfuturetest.domain.logic.BatteryStatusResolverImpl
 import com.example.starkfuturetest.domain.model.BatteryInfo
@@ -15,6 +16,8 @@ import com.example.starkfuturetest.domain.model.WarningSeverity
 import com.example.starkfuturetest.presentation.dashboard.formatter.DurationFormatterImpl
 import com.example.starkfuturetest.presentation.dashboard.formatter.TelemetryValueFormatterImpl
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapperImpl
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -59,11 +62,38 @@ class TelemetryUiMapperTest {
 
     @Before
     fun setUp() {
+        val resources = mockk<ResourcesRepository>()
+
+        every { resources.getString(R.string.format_duration_hm, any(), any()) } answers {
+            "${secondArg<Int>()}h ${thirdArg<String>()}m"
+        }
+        every { resources.getString(R.string.format_duration_m, any()) } answers {
+            "${secondArg<Int>()}m"
+        }
+        every { resources.getString(R.string.format_speed_kmh, any()) } answers {
+            "%.1f km/h".format(secondArg<Double>())
+        }
+        every { resources.getString(R.string.format_power_hp, any()) } answers {
+            "%.1f hp".format(secondArg<Double>())
+        }
+        every { resources.getString(R.string.format_temperature_c, any()) } answers {
+            "%.1f°C".format(secondArg<Double>())
+        }
+        every { resources.getString(R.string.format_distance_km, any()) } answers {
+            "%.1f km".format(secondArg<Double>())
+        }
+        every { resources.getString(R.string.format_range_km, any()) } answers {
+            "${secondArg<Int>()} km"
+        }
+        every { resources.getString(R.string.format_percentage, any()) } answers {
+            "${secondArg<Int>()}%"
+        }
+
         mapper = TelemetryUiMapperImpl(
             batteryStatusResolver = BatteryStatusResolverImpl(),
             averageSpeedCalculator = AverageSpeedCalculatorImpl(),
-            durationFormatter = DurationFormatterImpl(),
-            valueFormatter = TelemetryValueFormatterImpl(),
+            durationFormatter = DurationFormatterImpl(resources),
+            valueFormatter = TelemetryValueFormatterImpl(resources),
         )
     }
 

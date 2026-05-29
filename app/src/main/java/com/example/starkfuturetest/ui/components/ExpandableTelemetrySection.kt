@@ -22,8 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import com.example.starkfuturetest.R
 import com.example.starkfuturetest.ui.theme.StarkSpacing
 
 @Composable
@@ -36,14 +38,18 @@ fun ExpandableTelemetrySection(
     expandedContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val toggleDescription = if (isExpanded) {
+        stringResource(R.string.cd_section_collapse, title)
+    } else {
+        stringResource(R.string.cd_section_expand, title)
+    }
+
     TelemetryCard(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onToggle)
-                .semantics {
-                    contentDescription = if (isExpanded) "Collapse $title" else "Expand $title"
-                },
+                .semantics { contentDescription = toggleDescription },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

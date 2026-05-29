@@ -36,7 +36,7 @@ class TelemetryUiMapperImpl @Inject constructor(
                 stateOfChargePct = snapshot.battery.stateOfChargePct,
                 displayCharge = valueFormatter.formatPercentage(snapshot.battery.stateOfChargePct),
                 chargingState = snapshot.battery.chargingState.replaceFirstChar { it.uppercaseChar() },
-                estimatedRange = "${snapshot.battery.estimatedRangeKm} km",
+                estimatedRange = valueFormatter.formatRange(snapshot.battery.estimatedRangeKm),
                 temperatureC = valueFormatter.formatTemperature(snapshot.battery.temperatureC),
                 batteryStatus = batteryStatus,
             ),
@@ -46,9 +46,9 @@ class TelemetryUiMapperImpl @Inject constructor(
             ),
             rideSettings = RideSettingsUiModel(
                 powerMap = valueFormatter.formatPowerMap(snapshot.rideSettings.powerMap),
-                maxPower = "${snapshot.rideSettings.maxPowerHp} hp",
-                engineBraking = "${snapshot.rideSettings.engineBrakingPct}%",
-                regen = "${snapshot.rideSettings.regenPct}%",
+                maxPower = valueFormatter.formatPower(snapshot.rideSettings.maxPowerHp.toDouble()),
+                engineBraking = valueFormatter.formatPercentage(snapshot.rideSettings.engineBrakingPct),
+                regen = valueFormatter.formatPercentage(snapshot.rideSettings.regenPct),
             ),
             session = SessionUiModel(
                 duration = durationFormatter.format(snapshot.session.durationS),

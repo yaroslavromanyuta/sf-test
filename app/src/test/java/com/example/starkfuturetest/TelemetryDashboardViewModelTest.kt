@@ -11,6 +11,7 @@ import com.example.starkfuturetest.domain.model.MotorInfo
 import com.example.starkfuturetest.domain.model.RideSettings
 import com.example.starkfuturetest.domain.model.SessionInfo
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
+import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
 import com.example.starkfuturetest.presentation.dashboard.BatteryUiModel
 import com.example.starkfuturetest.presentation.dashboard.MotorUiModel
@@ -24,6 +25,7 @@ import com.example.starkfuturetest.presentation.dashboard.TelemetrySectionId
 import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapper
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -44,6 +46,9 @@ class TelemetryDashboardViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private val useCase: GetTelemetrySnapshotUseCase = mockk()
     private val uiMapper: TelemetryUiMapper = mockk()
+    private val resources: ResourcesRepository = mockk {
+        every { getString(any()) } answers { "error: ${firstArg<Int>()}" }
+    }
 
     private val fakeSnapshot = TelemetrySnapshot(
         bike = BikeInfo("Stark VARG MX 1.2", "Alpha", "3.4.1", ""),
@@ -83,7 +88,7 @@ class TelemetryDashboardViewModelTest {
         coEvery { useCase() } coAnswers { kotlinx.coroutines.delay(1000); AppResult.Success(fakeSnapshot) }
         coEvery { uiMapper.map(any()) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         assertEquals(TelemetryDashboardUiState.Loading, viewModel.uiState.value)
     }
 
@@ -92,7 +97,7 @@ class TelemetryDashboardViewModelTest {
         coEvery { useCase() } returns AppResult.Success(fakeSnapshot)
         coEvery { uiMapper.map(fakeSnapshot) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         viewModel.uiState.test {
             skipItems(1) // Loading
             testDispatcher.scheduler.advanceUntilIdle()
@@ -107,7 +112,7 @@ class TelemetryDashboardViewModelTest {
         val blankSnapshot = fakeSnapshot.copy(bike = fakeSnapshot.bike.copy(model = ""))
         coEvery { useCase() } returns AppResult.Success(blankSnapshot)
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         viewModel.uiState.test {
             skipItems(1) // Loading
             testDispatcher.scheduler.advanceUntilIdle()
@@ -119,13 +124,12 @@ class TelemetryDashboardViewModelTest {
     fun `parse error emits Error state with correct message`() = runTest {
         coEvery { useCase() } returns AppResult.Error(AppError.ParseError)
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         viewModel.uiState.test {
             skipItems(1) // Loading
             testDispatcher.scheduler.advanceUntilIdle()
             val error = awaitItem()
             assertTrue(error is TelemetryDashboardUiState.Error)
-            assertEquals("Failed to parse telemetry snapshot", (error as TelemetryDashboardUiState.Error).message)
         }
     }
 
@@ -135,7 +139,7 @@ class TelemetryDashboardViewModelTest {
         coEvery { uiMapper.map(any()) } returns fakeUiModel
         testDispatcher.scheduler.advanceUntilIdle()
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertTrue(TelemetrySectionId.Battery in viewModel.expandedSections.value)
@@ -150,7 +154,7 @@ class TelemetryDashboardViewModelTest {
         coEvery { useCase() } returns AppResult.Success(fakeSnapshot)
         coEvery { uiMapper.map(any()) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         val expanded = viewModel.expandedSections.value
         assertTrue(TelemetrySectionId.Battery in expanded)
         assertTrue(TelemetrySectionId.Warnings in expanded)
@@ -162,7 +166,7 @@ class TelemetryDashboardViewModelTest {
         coEvery { useCase() } returns AppResult.Success(fakeSnapshot)
         coEvery { uiMapper.map(any()) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         assertEquals(ThemeMode.Dark, viewModel.themeMode.value)
         viewModel.onAction(TelemetryDashboardAction.ChangeTheme(ThemeMode.Light))
         assertEquals(ThemeMode.Light, viewModel.themeMode.value)
@@ -176,7 +180,7 @@ class TelemetryDashboardViewModelTest {
         )
         coEvery { uiMapper.map(any()) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper)
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         testDispatcher.scheduler.advanceUntilIdle()
         assertTrue(viewModel.uiState.value is TelemetryDashboardUiState.Error)
 

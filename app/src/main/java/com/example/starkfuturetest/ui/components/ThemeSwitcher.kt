@@ -10,9 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.example.starkfuturetest.R
 import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.ui.theme.StarkSpacing
 
@@ -31,8 +33,10 @@ fun ThemeSwitcher(
     ) {
         ThemeMode.entries.forEach { mode ->
             val isSelected = mode == currentTheme
+            val displayName = mode.displayName()
+            val contentDescriptionValue = stringResource(R.string.cd_theme_option, displayName)
             Text(
-                text = mode.name,
+                text = displayName,
                 style = MaterialTheme.typography.labelLarge,
                 color = if (isSelected) MaterialTheme.colorScheme.onSurface
                         else MaterialTheme.colorScheme.onSurfaceVariant,
@@ -45,8 +49,17 @@ fun ThemeSwitcher(
                     )
                     .clickable { onThemeChange(mode) }
                     .padding(horizontal = StarkSpacing.md, vertical = StarkSpacing.sm)
-                    .semantics { contentDescription = "${mode.name} theme" },
+                    .semantics {
+                        contentDescription = contentDescriptionValue
+                    },
             )
         }
     }
+}
+
+@Composable
+private fun ThemeMode.displayName(): String = when (this) {
+    ThemeMode.System -> stringResource(R.string.theme_system)
+    ThemeMode.Light -> stringResource(R.string.theme_light)
+    ThemeMode.Dark -> stringResource(R.string.theme_dark)
 }

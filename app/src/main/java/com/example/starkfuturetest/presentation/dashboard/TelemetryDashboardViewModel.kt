@@ -2,6 +2,8 @@ package com.example.starkfuturetest.presentation.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.starkfuturetest.R
+import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.core.result.AppError
 import com.example.starkfuturetest.core.result.AppResult
 import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class TelemetryDashboardViewModel @Inject constructor(
     private val getTelemetrySnapshotUseCase: GetTelemetrySnapshotUseCase,
     private val uiMapper: TelemetryUiMapper,
+    private val resources: ResourcesRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<TelemetryDashboardUiState>(TelemetryDashboardUiState.Loading)
@@ -69,9 +72,9 @@ class TelemetryDashboardViewModel @Inject constructor(
     }
 
     private fun errorMessage(error: AppError): String = when (error) {
-        AppError.EmptyData -> "No telemetry data available"
-        AppError.ParseError -> "Failed to parse telemetry snapshot"
-        AppError.AssetReadError -> "Could not read telemetry data"
-        is AppError.Unknown -> "An unexpected error occurred"
+        AppError.EmptyData -> resources.getString(R.string.error_message_empty_data)
+        AppError.ParseError -> resources.getString(R.string.error_message_parse_error)
+        AppError.AssetReadError -> resources.getString(R.string.error_message_asset_read)
+        is AppError.Unknown -> resources.getString(R.string.error_message_unknown)
     }
 }

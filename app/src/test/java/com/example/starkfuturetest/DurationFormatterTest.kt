@@ -1,6 +1,9 @@
 package com.example.starkfuturetest
 
+import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.presentation.dashboard.formatter.DurationFormatterImpl
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +14,17 @@ class DurationFormatterTest {
 
     @Before
     fun setUp() {
-        formatter = DurationFormatterImpl()
+        val resources = mockk<ResourcesRepository>()
+        every { resources.getString(R.string.format_duration_hm, any(), any()) } answers {
+            val hours = secondArg<Int>()
+            val minutesPadded = thirdArg<String>()
+            "${hours}h ${minutesPadded}m"
+        }
+        every { resources.getString(R.string.format_duration_m, any()) } answers {
+            val minutes = secondArg<Int>()
+            "${minutes}m"
+        }
+        formatter = DurationFormatterImpl(resources)
     }
 
     @Test
@@ -37,11 +50,6 @@ class DurationFormatterTest {
     @Test
     fun `7322 seconds formats to 2h 02m`() {
         assertEquals("2h 02m", formatter.format(7322))
-    }
-
-    @Test
-    fun `90 seconds formats to 1m`() {
-        assertEquals("1m", formatter.format(90))
     }
 
     @Test

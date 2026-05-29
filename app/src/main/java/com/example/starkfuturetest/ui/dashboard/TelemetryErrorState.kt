@@ -17,8 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.starkfuturetest.R
 import com.example.starkfuturetest.ui.theme.StarkColors
 import com.example.starkfuturetest.ui.theme.StarkSpacing
 
@@ -45,7 +47,7 @@ fun TelemetryErrorState(
             )
             Spacer(modifier = Modifier.height(StarkSpacing.md))
             Text(
-                text = "Failed to load telemetry",
+                text = stringResource(R.string.error_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
@@ -59,7 +61,7 @@ fun TelemetryErrorState(
             )
             Spacer(modifier = Modifier.height(StarkSpacing.lg))
             Button(onClick = onRetry) {
-                Text(text = "Retry")
+                Text(text = stringResource(R.string.error_retry))
             }
         }
     }

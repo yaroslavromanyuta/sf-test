@@ -20,7 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.starkfuturetest.R
 import com.example.starkfuturetest.presentation.dashboard.WarningUiModel
 import com.example.starkfuturetest.ui.theme.StarkColors
 import com.example.starkfuturetest.ui.theme.StarkSpacing
@@ -53,7 +55,7 @@ private fun SingleWarningBanner(warning: WarningUiModel) {
     ) {
         Icon(
             imageVector = Icons.Outlined.Warning,
-            contentDescription = "Warning",
+            contentDescription = stringResource(R.string.cd_warning_icon),
             tint = StarkColors.WarningAmber,
             modifier = Modifier.size(20.dp),
         )
@@ -87,12 +89,12 @@ private fun HealthyBanner(modifier: Modifier = Modifier) {
     ) {
         Icon(
             imageVector = Icons.Outlined.CheckCircle,
-            contentDescription = "No active warnings",
+            contentDescription = stringResource(R.string.cd_no_warnings_icon),
             tint = StarkColors.SuccessGreen,
             modifier = Modifier.size(20.dp),
         )
         Text(
-            text = "Healthy · No active warnings",
+            text = stringResource(R.string.warning_healthy_label),
             style = MaterialTheme.typography.titleMedium,
             color = StarkColors.SuccessGreen,
         )

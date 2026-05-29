@@ -25,12 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
+import com.example.starkfuturetest.R
 import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardAction
 import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardUiModel
 import com.example.starkfuturetest.presentation.dashboard.TelemetrySectionId
 import com.example.starkfuturetest.presentation.dashboard.ThemeMode
-import com.example.starkfuturetest.ui.components.BikeHeaderCard
 import com.example.starkfuturetest.ui.components.BatteryProgressIndicator
+import com.example.starkfuturetest.ui.components.BikeHeaderCard
 import com.example.starkfuturetest.ui.components.ExpandableTelemetrySection
 import com.example.starkfuturetest.ui.components.MetricTile
 import com.example.starkfuturetest.ui.components.StatusChip
@@ -56,7 +58,7 @@ fun TelemetryDashboardScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Telemetry",
+                        text = stringResource(R.string.dashboard_title),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -99,7 +101,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 ExpandableTelemetrySection(
-                    title = "Battery",
+                    title = stringResource(R.string.section_battery),
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Info,
@@ -138,17 +140,17 @@ fun TelemetryDashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
                         ) {
                             MetricTile(
-                                label = "Estimated Range",
+                                label = stringResource(R.string.metric_estimated_range),
                                 value = data.battery.estimatedRange,
                                 modifier = Modifier.weight(1f),
                             )
                             MetricTile(
-                                label = "Temperature",
+                                label = stringResource(R.string.metric_temperature),
                                 value = data.battery.temperatureC,
                                 modifier = Modifier.weight(1f),
                             )
                             MetricTile(
-                                label = "State",
+                                label = stringResource(R.string.metric_state),
                                 value = data.battery.chargingState,
                                 modifier = Modifier.weight(1f),
                             )
@@ -159,7 +161,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 ExpandableTelemetrySection(
-                    title = "Performance",
+                    title = stringResource(R.string.section_performance),
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Build,
@@ -175,12 +177,12 @@ fun TelemetryDashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
                         ) {
                             MetricTile(
-                                label = "Power",
+                                label = stringResource(R.string.metric_power),
                                 value = data.motor.power,
                                 modifier = Modifier.weight(1f),
                             )
                             MetricTile(
-                                label = "Motor Temp",
+                                label = stringResource(R.string.metric_motor_temp),
                                 value = data.motor.temperatureC,
                                 modifier = Modifier.weight(1f),
                             )
@@ -192,7 +194,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 ExpandableTelemetrySection(
-                    title = "Ride Settings",
+                    title = stringResource(R.string.section_ride_settings),
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
@@ -208,12 +210,12 @@ fun TelemetryDashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
                         ) {
                             MetricTile(
-                                label = "Power Map",
+                                label = stringResource(R.string.metric_power_map),
                                 value = data.rideSettings.powerMap,
                                 modifier = Modifier.weight(1f),
                             )
                             MetricTile(
-                                label = "Max Power",
+                                label = stringResource(R.string.metric_max_power),
                                 value = data.rideSettings.maxPower,
                                 modifier = Modifier.weight(1f),
                             )
@@ -225,12 +227,12 @@ fun TelemetryDashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
                         ) {
                             MetricTile(
-                                label = "Engine Braking",
+                                label = stringResource(R.string.metric_engine_braking),
                                 value = data.rideSettings.engineBraking,
                                 modifier = Modifier.weight(1f),
                             )
                             MetricTile(
-                                label = "Regen",
+                                label = stringResource(R.string.metric_regen),
                                 value = data.rideSettings.regen,
                                 modifier = Modifier.weight(1f),
                             )
@@ -241,7 +243,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 ExpandableTelemetrySection(
-                    title = "Session",
+                    title = stringResource(R.string.section_session),
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Info,
@@ -257,12 +259,12 @@ fun TelemetryDashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
                         ) {
                             MetricTile(
-                                label = "Duration",
+                                label = stringResource(R.string.metric_duration),
                                 value = data.session.duration,
                                 modifier = Modifier.weight(1f),
                             )
                             MetricTile(
-                                label = "Distance",
+                                label = stringResource(R.string.metric_distance),
                                 value = data.session.distance,
                                 modifier = Modifier.weight(1f),
                             )
@@ -274,12 +276,12 @@ fun TelemetryDashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
                         ) {
                             MetricTile(
-                                label = "Max Speed",
+                                label = stringResource(R.string.metric_max_speed),
                                 value = data.session.maxSpeed,
                                 modifier = Modifier.weight(1f),
                             )
                             MetricTile(
-                                label = "Avg Speed",
+                                label = stringResource(R.string.metric_avg_speed),
                                 value = data.session.averageSpeed,
                                 modifier = Modifier.weight(1f),
                             )
@@ -290,7 +292,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 ExpandableTelemetrySection(
-                    title = "Warnings",
+                    title = stringResource(R.string.section_warnings),
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Warning,
