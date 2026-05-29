@@ -7,6 +7,7 @@ import com.example.starkfuturetest.data.mapper.TelemetryDtoToDomainMapper
 import com.example.starkfuturetest.data.parser.TelemetryJsonParser
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
 import com.example.starkfuturetest.domain.repository.TelemetryRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 import java.io.IOException
 import javax.inject.Inject
@@ -22,9 +23,11 @@ class TelemetryRepositoryImpl @Inject constructor(
             val json = dataSource.getTelemetrySnapshotJson()
             val dto = parser.parse(json)
             AppResult.Success(mapper.map(dto))
-        } catch (e: IOException) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: IOException) {
             AppResult.Error(AppError.AssetReadError)
-        } catch (e: SerializationException) {
+        } catch (_: SerializationException) {
             AppResult.Error(AppError.ParseError)
         } catch (e: Exception) {
             AppResult.Error(AppError.Unknown(e))
