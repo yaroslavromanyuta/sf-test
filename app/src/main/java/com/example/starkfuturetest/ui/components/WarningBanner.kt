@@ -5,9 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,19 +57,11 @@ private fun SingleWarningBanner(warning: WarningUiModel) {
             tint = StarkColors.WarningAmber,
             modifier = Modifier.size(20.dp),
         )
-        Column {
-            Text(
-                text = warning.message,
-                style = MaterialTheme.typography.titleMedium,
-                color = StarkColors.WarningAmber,
-            )
-            Spacer(modifier = Modifier.height(StarkSpacing.xs))
-            Text(
-                text = warning.code.uppercase(),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
+        Text(
+            text = warning.message,
+            style = MaterialTheme.typography.titleMedium,
+            color = StarkColors.WarningAmber,
+        )
     }
 }
 

@@ -30,7 +30,7 @@ class TelemetryDashboardViewModel @Inject constructor(
     val themeMode: StateFlow<ThemeMode> = _themeMode.asStateFlow()
 
     private val _expandedSections = MutableStateFlow<Set<TelemetrySectionId>>(
-        setOf(TelemetrySectionId.Battery, TelemetrySectionId.Warnings),
+        setOf(TelemetrySectionId.Battery),
     )
     val expandedSections: StateFlow<Set<TelemetrySectionId>> = _expandedSections.asStateFlow()
 

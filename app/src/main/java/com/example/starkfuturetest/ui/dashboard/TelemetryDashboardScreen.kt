@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -97,6 +96,10 @@ fun TelemetryDashboardScreen(
                     formattedTimestamp = data.formattedTimestamp,
                     imageUrl = data.imageUrl,
                 )
+            }
+
+            item {
+                WarningBanner(warnings = data.warnings)
             }
 
             item {
@@ -204,7 +207,7 @@ fun TelemetryDashboardScreen(
                     },
                     isExpanded = TelemetrySectionId.RideSettings in expandedSections,
                     onToggle = { onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.RideSettings)) },
-                    compactContent = {
+                    expandedContent = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
@@ -220,8 +223,7 @@ fun TelemetryDashboardScreen(
                                 modifier = Modifier.weight(1f),
                             )
                         }
-                    },
-                    expandedContent = {
+                        Spacer(modifier = Modifier.height(StarkSpacing.sm))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
@@ -253,7 +255,7 @@ fun TelemetryDashboardScreen(
                     },
                     isExpanded = TelemetrySectionId.Session in expandedSections,
                     onToggle = { onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.Session)) },
-                    compactContent = {
+                    expandedContent = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
@@ -269,8 +271,7 @@ fun TelemetryDashboardScreen(
                                 modifier = Modifier.weight(1f),
                             )
                         }
-                    },
-                    expandedContent = {
+                        Spacer(modifier = Modifier.height(StarkSpacing.sm))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
@@ -290,24 +291,6 @@ fun TelemetryDashboardScreen(
                 )
             }
 
-            item {
-                ExpandableTelemetrySection(
-                    title = stringResource(R.string.section_warnings),
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Warning,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
-                    isExpanded = TelemetrySectionId.Warnings in expandedSections,
-                    onToggle = { onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.Warnings)) },
-                    compactContent = {
-                        WarningBanner(warnings = data.warnings)
-                    },
-                    expandedContent = {},
-                )
-            }
         }
     }
 }

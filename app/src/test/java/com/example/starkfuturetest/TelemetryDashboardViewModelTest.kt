@@ -150,14 +150,14 @@ class TelemetryDashboardViewModelTest {
     }
 
     @Test
-    fun `default expanded sections are Battery and Warnings`() = runTest {
+    fun `default expanded section is Battery`() = runTest {
         coEvery { useCase() } returns AppResult.Success(fakeSnapshot)
         coEvery { uiMapper.map(any()) } returns fakeUiModel
 
         val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
         val expanded = viewModel.expandedSections.value
         assertTrue(TelemetrySectionId.Battery in expanded)
-        assertTrue(TelemetrySectionId.Warnings in expanded)
+        assertFalse(TelemetrySectionId.Warnings in expanded)
         assertFalse(TelemetrySectionId.Session in expanded)
     }
 

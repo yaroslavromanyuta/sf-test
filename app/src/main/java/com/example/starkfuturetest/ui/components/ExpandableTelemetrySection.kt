@@ -34,9 +34,9 @@ fun ExpandableTelemetrySection(
     icon: @Composable () -> Unit,
     isExpanded: Boolean,
     onToggle: () -> Unit,
-    compactContent: @Composable ColumnScope.() -> Unit,
     expandedContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
+    compactContent: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
     val toggleDescription = if (isExpanded) {
         stringResource(R.string.cd_section_collapse, title)
@@ -71,18 +71,24 @@ fun ExpandableTelemetrySection(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Spacer(modifier = Modifier.height(StarkSpacing.md))
-        compactContent()
+        if (compactContent != null) {
+            Spacer(modifier = Modifier.height(StarkSpacing.md))
+            compactContent()
+        }
         AnimatedVisibility(
             visible = isExpanded,
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {
             Column {
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = StarkSpacing.md),
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                )
+                if (compactContent != null) {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = StarkSpacing.md),
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(StarkSpacing.md))
+                }
                 expandedContent()
             }
         }
