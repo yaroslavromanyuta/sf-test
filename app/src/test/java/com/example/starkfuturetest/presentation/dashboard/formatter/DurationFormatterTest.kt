@@ -16,10 +16,12 @@ class DurationFormatterTest {
     fun setUp() {
         val resources = mockk<ResourcesRepository>()
         every { resources.getString(R.string.format_duration_hm, any(), any()) } answers {
-            "${secondArg<Int>()}h ${thirdArg<String>()}m"
+            val args = invocation.args[1] as Array<*>
+            "${args[0] as Int}h ${args[1] as String}m"
         }
         every { resources.getString(R.string.format_duration_m, any()) } answers {
-            "${secondArg<Int>()}m"
+            val args = invocation.args[1] as Array<*>
+            "${args[0] as Int}m"
         }
         formatter = DurationFormatterImpl(resources)
     }

@@ -16,22 +16,22 @@ class TelemetryValueFormatterImplTest {
     fun setUp() {
         val resources = mockk<ResourcesRepository>()
         every { resources.getString(R.string.format_speed_kmh, any()) } answers {
-            "%.1f km/h".format(secondArg<Double>())
+            "%.1f km/h".format((invocation.args[1] as Array<*>)[0] as Double)
         }
         every { resources.getString(R.string.format_power_hp, any()) } answers {
-            "%.1f hp".format(secondArg<Double>())
+            "%.1f hp".format((invocation.args[1] as Array<*>)[0] as Double)
         }
         every { resources.getString(R.string.format_temperature_c, any()) } answers {
-            "%.1f°C".format(secondArg<Double>())
+            "%.1f°C".format((invocation.args[1] as Array<*>)[0] as Double)
         }
         every { resources.getString(R.string.format_distance_km, any()) } answers {
-            "%.1f km".format(secondArg<Double>())
+            "%.1f km".format((invocation.args[1] as Array<*>)[0] as Double)
         }
         every { resources.getString(R.string.format_range_km, any()) } answers {
-            "${secondArg<Int>()} km"
+            "${(invocation.args[1] as Array<*>)[0] as Int} km"
         }
         every { resources.getString(R.string.format_percentage, any()) } answers {
-            "${secondArg<Int>()}%"
+            "${(invocation.args[1] as Array<*>)[0] as Int}%"
         }
         formatter = TelemetryValueFormatterImpl(resources)
     }
