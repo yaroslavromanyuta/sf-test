@@ -162,10 +162,70 @@ class TelemetryUiMapperTest {
     }
 
     @Test
+    fun `battery temperature formatted`() {
+        val result = mapper.map(snapshot)
+        assertEquals("34.7°C", result.battery.temperatureC)
+    }
+
+    @Test
+    fun `motor temperature formatted`() {
+        val result = mapper.map(snapshot)
+        assertEquals("61.2°C", result.motor.temperatureC)
+    }
+
+    @Test
+    fun `ride settings max power formatted`() {
+        val result = mapper.map(snapshot)
+        assertEquals("80.0 hp", result.rideSettings.maxPower)
+    }
+
+    @Test
+    fun `ride settings engine braking formatted`() {
+        val result = mapper.map(snapshot)
+        assertEquals("45%", result.rideSettings.engineBraking)
+    }
+
+    @Test
+    fun `ride settings regen formatted`() {
+        val result = mapper.map(snapshot)
+        assertEquals("60%", result.rideSettings.regen)
+    }
+
+    @Test
+    fun `session distance formatted`() {
+        val result = mapper.map(snapshot)
+        assertEquals("24.7 km", result.session.distance)
+    }
+
+    @Test
+    fun `fault codes passed through`() {
+        val snapshotWithFaults = snapshot.copy(
+            diagnostics = snapshot.diagnostics.copy(faultCodes = listOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT")),
+        )
+        val result = mapper.map(snapshotWithFaults)
+        assertEquals(listOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT"), result.faultCodes)
+    }
+
+    @Test
+    fun `empty fault codes maps to empty list`() {
+        val result = mapper.map(snapshot)
+        assertEquals(emptyList<String>(), result.faultCodes)
+    }
+
+    @Test
     fun `warnings mapped correctly`() {
         val result = mapper.map(snapshot)
         assertEquals(1, result.warnings.size)
         assertEquals("W_MOT_TEMP_HIGH", result.warnings[0].code)
         assertEquals("Motor temperature high", result.warnings[0].message)
+    }
+
+    @Test
+    fun `empty warnings maps to empty list`() {
+        val snapshotNoWarnings = snapshot.copy(
+            diagnostics = snapshot.diagnostics.copy(warnings = emptyList()),
+        )
+        val result = mapper.map(snapshotNoWarnings)
+        assertEquals(emptyList<com.example.starkfuturetest.presentation.dashboard.WarningUiModel>(), result.warnings)
     }
 }

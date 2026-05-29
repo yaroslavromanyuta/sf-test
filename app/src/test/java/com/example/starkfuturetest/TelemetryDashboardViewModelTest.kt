@@ -28,6 +28,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -169,6 +170,56 @@ class TelemetryDashboardViewModelTest {
         assertEquals(ThemeMode.Dark, viewModel.themeMode.value)
         viewModel.onAction(TelemetryDashboardAction.ChangeTheme(ThemeMode.Light))
         assertEquals(ThemeMode.Light, viewModel.themeMode.value)
+    }
+
+    @Test
+    fun `empty data error emits Error state`() = runTest {
+        every { useCase() } returns flowOf(AppResult.Error(AppError.EmptyData))
+
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
+        viewModel.uiState.test {
+            skipItems(1) // Loading
+            testDispatcher.scheduler.advanceUntilIdle()
+            assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
+        }
+    }
+
+    @Test
+    fun `unknown error emits Error state`() = runTest {
+        every { useCase() } returns flowOf(AppResult.Error(AppError.Unknown()))
+
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
+        viewModel.uiState.test {
+            skipItems(1) // Loading
+            testDispatcher.scheduler.advanceUntilIdle()
+            assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
+        }
+    }
+
+    @Test
+    fun `subsequent flow emissions update content state`() = runTest {
+        val secondSnapshot = fakeSnapshot.copy(
+            battery = fakeSnapshot.battery.copy(stateOfChargePct = 55),
+        )
+        val secondUiModel = fakeUiModel.copy(
+            battery = fakeUiModel.battery.copy(stateOfChargePct = 55, displayCharge = "55%"),
+        )
+        every { useCase() } returns flow {
+            emit(AppResult.Success(fakeSnapshot))
+            emit(AppResult.Success(secondSnapshot))
+        }
+        every { uiMapper.map(fakeSnapshot) } returns fakeUiModel
+        every { uiMapper.map(secondSnapshot) } returns secondUiModel
+
+        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
+        viewModel.uiState.test {
+            skipItems(1) // Loading
+            testDispatcher.scheduler.advanceUntilIdle()
+            val first = awaitItem() as TelemetryDashboardUiState.Content
+            assertEquals(73, first.data.battery.stateOfChargePct)
+            val second = awaitItem() as TelemetryDashboardUiState.Content
+            assertEquals(55, second.data.battery.stateOfChargePct)
+        }
     }
 
     @Test
