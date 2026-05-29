@@ -71,6 +71,7 @@ class TelemetryDashboardViewModelTest {
         rideSettings = RideSettingsUiModel("Enduro", "80 hp", "45%", "60%"),
         session = SessionUiModel("1h 02m", "24.7 km", "94.1 km/h", "23.8 km/h"),
         warnings = emptyList(),
+        faultCodes = emptyList(),
     )
 
     @Before

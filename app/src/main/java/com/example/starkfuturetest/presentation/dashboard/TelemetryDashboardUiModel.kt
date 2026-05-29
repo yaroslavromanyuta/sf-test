@@ -13,6 +13,7 @@ data class TelemetryDashboardUiModel(
     val rideSettings: RideSettingsUiModel,
     val session: SessionUiModel,
     val warnings: List<WarningUiModel>,
+    val faultCodes: List<String>,
 )
 
 data class BatteryUiModel(

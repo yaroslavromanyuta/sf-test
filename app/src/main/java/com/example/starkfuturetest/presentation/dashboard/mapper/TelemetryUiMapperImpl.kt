@@ -63,6 +63,7 @@ class TelemetryUiMapperImpl @Inject constructor(
                     severity = warning.severity.name,
                 )
             },
+            faultCodes = snapshot.diagnostics.faultCodes,
         )
     }
 }

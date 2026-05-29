@@ -28,7 +28,7 @@
     "max_speed_kmh": 94.1
   },
   "diagnostics": {
-    "fault_codes": [],
+    "fault_codes": ["E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT"],
     "warnings": [
       {
         "code": "W_MOT_TEMP_HIGH",

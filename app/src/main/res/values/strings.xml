@@ -22,6 +22,7 @@
     <string name="section_ride_settings">Ride Settings</string>
     <string name="section_session">Session</string>
     <string name="section_warnings">Warnings</string>
+    <string name="section_fault_codes">Fault Codes</string>
 
     <!-- Metric labels -->
     <string name="metric_estimated_range">Estimated Range</string>

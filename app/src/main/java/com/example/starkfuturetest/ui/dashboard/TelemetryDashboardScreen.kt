@@ -1,6 +1,7 @@
 package com.example.starkfuturetest.ui.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.starkfuturetest.R
 import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardAction
 import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardUiModel
@@ -291,6 +295,44 @@ fun TelemetryDashboardScreen(
                 )
             }
 
+            if (data.faultCodes.isNotEmpty()) {
+                item {
+                    ExpandableTelemetrySection(
+                        title = stringResource(R.string.section_fault_codes),
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Warning,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error,
+                            )
+                        },
+                        isExpanded = TelemetrySectionId.FaultCodes in expandedSections,
+                        onToggle = { onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.FaultCodes)) },
+                        expandedContent = {
+                            Column(verticalArrangement = Arrangement.spacedBy(StarkSpacing.sm)) {
+                                data.faultCodes.forEach { code ->
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(StarkSpacing.sm),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Warning,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.error,
+                                            modifier = Modifier.size(16.dp),
+                                        )
+                                        Text(
+                                            text = code,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                        )
+                                    }
+                                }
+                            }
+                        },
+                    )
+                }
+            }
         }
     }
 }
