@@ -1,6 +1,7 @@
-package com.example.starkfuturetest
+package com.example.starkfuturetest.presentation.dashboard
 
 import app.cash.turbine.test
+import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.core.result.AppError
 import com.example.starkfuturetest.core.result.AppResult
 import com.example.starkfuturetest.domain.model.BatteryInfo
@@ -11,18 +12,7 @@ import com.example.starkfuturetest.domain.model.MotorInfo
 import com.example.starkfuturetest.domain.model.RideSettings
 import com.example.starkfuturetest.domain.model.SessionInfo
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
-import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
-import com.example.starkfuturetest.presentation.dashboard.BatteryUiModel
-import com.example.starkfuturetest.presentation.dashboard.MotorUiModel
-import com.example.starkfuturetest.presentation.dashboard.RideSettingsUiModel
-import com.example.starkfuturetest.presentation.dashboard.SessionUiModel
-import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardAction
-import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardUiModel
-import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardUiState
-import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardViewModel
-import com.example.starkfuturetest.presentation.dashboard.TelemetrySectionId
-import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapper
 import io.mockk.every
 import io.mockk.mockk
@@ -85,13 +75,14 @@ class TelemetryDashboardViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private fun viewModel() = TelemetryDashboardViewModel(useCase, uiMapper, resources)
+
     @Test
     fun `initial state is Loading`() = runTest {
         every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
         every { uiMapper.map(any()) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        assertEquals(TelemetryDashboardUiState.Loading, viewModel.uiState.value)
+        assertEquals(TelemetryDashboardUiState.Loading, viewModel().uiState.value)
     }
 
     @Test
@@ -99,24 +90,21 @@ class TelemetryDashboardViewModelTest {
         every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
         every { uiMapper.map(fakeSnapshot) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        viewModel.uiState.test {
+        viewModel().uiState.test {
             skipItems(1) // Loading
             testDispatcher.scheduler.advanceUntilIdle()
-            val content = awaitItem()
-            assertTrue(content is TelemetryDashboardUiState.Content)
-            assertEquals(fakeUiModel, (content as TelemetryDashboardUiState.Content).data)
+            val content = awaitItem() as TelemetryDashboardUiState.Content
+            assertEquals(fakeUiModel, content.data)
         }
     }
 
     @Test
-    fun `blank model emits Empty state`() = runTest {
+    fun `blank bike model emits Empty state`() = runTest {
         val blankSnapshot = fakeSnapshot.copy(bike = fakeSnapshot.bike.copy(model = ""))
         every { useCase() } returns flowOf(AppResult.Success(blankSnapshot))
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        viewModel.uiState.test {
-            skipItems(1) // Loading
+        viewModel().uiState.test {
+            skipItems(1)
             testDispatcher.scheduler.advanceUntilIdle()
             assertEquals(TelemetryDashboardUiState.Empty, awaitItem())
         }
@@ -126,59 +114,30 @@ class TelemetryDashboardViewModelTest {
     fun `parse error emits Error state`() = runTest {
         every { useCase() } returns flowOf(AppResult.Error(AppError.ParseError))
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        viewModel.uiState.test {
-            skipItems(1) // Loading
+        viewModel().uiState.test {
+            skipItems(1)
             testDispatcher.scheduler.advanceUntilIdle()
             assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
         }
     }
 
     @Test
-    fun `toggle section expands and collapses`() = runTest {
-        every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
-        every { uiMapper.map(any()) } returns fakeUiModel
+    fun `asset read error emits Error state`() = runTest {
+        every { useCase() } returns flowOf(AppResult.Error(AppError.AssetReadError))
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        testDispatcher.scheduler.advanceUntilIdle()
-
-        assertTrue(TelemetrySectionId.Battery in viewModel.expandedSections.value)
-        viewModel.onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.Battery))
-        assertFalse(TelemetrySectionId.Battery in viewModel.expandedSections.value)
-        viewModel.onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.Battery))
-        assertTrue(TelemetrySectionId.Battery in viewModel.expandedSections.value)
-    }
-
-    @Test
-    fun `default expanded section is Battery`() = runTest {
-        every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
-        every { uiMapper.map(any()) } returns fakeUiModel
-
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        val expanded = viewModel.expandedSections.value
-        assertTrue(TelemetrySectionId.Battery in expanded)
-        assertFalse(TelemetrySectionId.Warnings in expanded)
-        assertFalse(TelemetrySectionId.Session in expanded)
-    }
-
-    @Test
-    fun `change theme updates themeMode`() = runTest {
-        every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
-        every { uiMapper.map(any()) } returns fakeUiModel
-
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        assertEquals(ThemeMode.Dark, viewModel.themeMode.value)
-        viewModel.onAction(TelemetryDashboardAction.ChangeTheme(ThemeMode.Light))
-        assertEquals(ThemeMode.Light, viewModel.themeMode.value)
+        viewModel().uiState.test {
+            skipItems(1)
+            testDispatcher.scheduler.advanceUntilIdle()
+            assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
+        }
     }
 
     @Test
     fun `empty data error emits Error state`() = runTest {
         every { useCase() } returns flowOf(AppResult.Error(AppError.EmptyData))
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        viewModel.uiState.test {
-            skipItems(1) // Loading
+        viewModel().uiState.test {
+            skipItems(1)
             testDispatcher.scheduler.advanceUntilIdle()
             assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
         }
@@ -188,9 +147,8 @@ class TelemetryDashboardViewModelTest {
     fun `unknown error emits Error state`() = runTest {
         every { useCase() } returns flowOf(AppResult.Error(AppError.Unknown()))
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        viewModel.uiState.test {
-            skipItems(1) // Loading
+        viewModel().uiState.test {
+            skipItems(1)
             testDispatcher.scheduler.advanceUntilIdle()
             assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
         }
@@ -198,12 +156,8 @@ class TelemetryDashboardViewModelTest {
 
     @Test
     fun `subsequent flow emissions update content state`() = runTest {
-        val secondSnapshot = fakeSnapshot.copy(
-            battery = fakeSnapshot.battery.copy(stateOfChargePct = 55),
-        )
-        val secondUiModel = fakeUiModel.copy(
-            battery = fakeUiModel.battery.copy(stateOfChargePct = 55, displayCharge = "55%"),
-        )
+        val secondSnapshot = fakeSnapshot.copy(battery = fakeSnapshot.battery.copy(stateOfChargePct = 55))
+        val secondUiModel = fakeUiModel.copy(battery = fakeUiModel.battery.copy(stateOfChargePct = 55))
         every { useCase() } returns flow {
             emit(AppResult.Success(fakeSnapshot))
             emit(AppResult.Success(secondSnapshot))
@@ -211,31 +165,65 @@ class TelemetryDashboardViewModelTest {
         every { uiMapper.map(fakeSnapshot) } returns fakeUiModel
         every { uiMapper.map(secondSnapshot) } returns secondUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
-        viewModel.uiState.test {
+        viewModel().uiState.test {
             skipItems(1) // Loading
             testDispatcher.scheduler.advanceUntilIdle()
-            val first = awaitItem() as TelemetryDashboardUiState.Content
-            assertEquals(73, first.data.battery.stateOfChargePct)
-            val second = awaitItem() as TelemetryDashboardUiState.Content
-            assertEquals(55, second.data.battery.stateOfChargePct)
+            assertEquals(73, (awaitItem() as TelemetryDashboardUiState.Content).data.battery.stateOfChargePct)
+            assertEquals(55, (awaitItem() as TelemetryDashboardUiState.Content).data.battery.stateOfChargePct)
         }
     }
 
     @Test
-    fun `retry reloads telemetry`() = runTest {
+    fun `retry cancels current collection and restarts`() = runTest {
         every { useCase() } returnsMany listOf(
             flowOf(AppResult.Error(AppError.AssetReadError)),
             flowOf(AppResult.Success(fakeSnapshot)),
         )
         every { uiMapper.map(any()) } returns fakeUiModel
 
-        val viewModel = TelemetryDashboardViewModel(useCase, uiMapper, resources)
+        val vm = viewModel()
         testDispatcher.scheduler.advanceUntilIdle()
-        assertTrue(viewModel.uiState.value is TelemetryDashboardUiState.Error)
+        assertTrue(vm.uiState.value is TelemetryDashboardUiState.Error)
 
-        viewModel.onAction(TelemetryDashboardAction.Retry)
+        vm.onAction(TelemetryDashboardAction.Retry)
         testDispatcher.scheduler.advanceUntilIdle()
-        assertTrue(viewModel.uiState.value is TelemetryDashboardUiState.Content)
+        assertTrue(vm.uiState.value is TelemetryDashboardUiState.Content)
+    }
+
+    @Test
+    fun `default expanded section is Battery only`() = runTest {
+        every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
+        every { uiMapper.map(any()) } returns fakeUiModel
+
+        val expanded = viewModel().expandedSections.value
+        assertTrue(TelemetrySectionId.Battery in expanded)
+        assertFalse(TelemetrySectionId.Session in expanded)
+        assertFalse(TelemetrySectionId.RideSettings in expanded)
+    }
+
+    @Test
+    fun `toggle section expands and collapses`() = runTest {
+        every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
+        every { uiMapper.map(any()) } returns fakeUiModel
+
+        val vm = viewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(TelemetrySectionId.Battery in vm.expandedSections.value)
+        vm.onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.Battery))
+        assertFalse(TelemetrySectionId.Battery in vm.expandedSections.value)
+        vm.onAction(TelemetryDashboardAction.ToggleSection(TelemetrySectionId.Battery))
+        assertTrue(TelemetrySectionId.Battery in vm.expandedSections.value)
+    }
+
+    @Test
+    fun `change theme updates themeMode`() = runTest {
+        every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
+        every { uiMapper.map(any()) } returns fakeUiModel
+
+        val vm = viewModel()
+        assertEquals(ThemeMode.Dark, vm.themeMode.value)
+        vm.onAction(TelemetryDashboardAction.ChangeTheme(ThemeMode.Light))
+        assertEquals(ThemeMode.Light, vm.themeMode.value)
     }
 }

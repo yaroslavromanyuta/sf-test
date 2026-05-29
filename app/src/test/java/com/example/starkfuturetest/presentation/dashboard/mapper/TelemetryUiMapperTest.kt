@@ -1,5 +1,6 @@
-package com.example.starkfuturetest
+package com.example.starkfuturetest.presentation.dashboard.mapper
 
+import com.example.starkfuturetest.R
 import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.domain.logic.AverageSpeedCalculatorImpl
 import com.example.starkfuturetest.domain.logic.BatteryStatusResolverImpl
@@ -13,9 +14,9 @@ import com.example.starkfuturetest.domain.model.RideSettings
 import com.example.starkfuturetest.domain.model.SessionInfo
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
 import com.example.starkfuturetest.domain.model.WarningSeverity
+import com.example.starkfuturetest.presentation.dashboard.WarningUiModel
 import com.example.starkfuturetest.presentation.dashboard.formatter.DurationFormatterImpl
 import com.example.starkfuturetest.presentation.dashboard.formatter.TelemetryValueFormatterImpl
-import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapperImpl
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
@@ -63,7 +64,6 @@ class TelemetryUiMapperTest {
     @Before
     fun setUp() {
         val resources = mockk<ResourcesRepository>()
-
         every { resources.getString(R.string.format_duration_hm, any(), any()) } answers {
             "${secondArg<Int>()}h ${thirdArg<String>()}m"
         }
@@ -88,7 +88,6 @@ class TelemetryUiMapperTest {
         every { resources.getString(R.string.format_percentage, any()) } answers {
             "${secondArg<Int>()}%"
         }
-
         mapper = TelemetryUiMapperImpl(
             batteryStatusResolver = BatteryStatusResolverImpl(),
             averageSpeedCalculator = AverageSpeedCalculatorImpl(),
@@ -103,113 +102,85 @@ class TelemetryUiMapperTest {
         assertEquals("Stark VARG MX 1.2", result.bikeModel)
         assertEquals("Alpha", result.variant)
         assertEquals("3.4.1", result.firmwareVersion)
+        assertEquals("https://example.com/bike.jpg", result.imageUrl)
     }
 
     @Test
     fun `formats timestamp correctly`() {
-        val result = mapper.map(snapshot)
-        assertEquals("2024-03-15 10:30", result.formattedTimestamp)
+        assertEquals("2024-03-15 10:30", mapper.map(snapshot).formattedTimestamp)
     }
 
     @Test
     fun `battery percentage and status`() {
-        val result = mapper.map(snapshot)
-        assertEquals(73, result.battery.stateOfChargePct)
-        assertEquals("73%", result.battery.displayCharge)
-        assertEquals(BatteryStatus.Healthy, result.battery.batteryStatus)
+        val result = mapper.map(snapshot).battery
+        assertEquals(73, result.stateOfChargePct)
+        assertEquals("73%", result.displayCharge)
+        assertEquals(BatteryStatus.Healthy, result.batteryStatus)
     }
 
     @Test
-    fun `battery charging state is capitalized`() {
-        val result = mapper.map(snapshot)
-        assertEquals("Discharging", result.battery.chargingState)
+    fun `battery charging state is capitalised`() {
+        assertEquals("Discharging", mapper.map(snapshot).battery.chargingState)
     }
 
     @Test
     fun `battery estimated range formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("38 km", result.battery.estimatedRange)
-    }
-
-    @Test
-    fun `motor power formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("52.4 hp", result.motor.power)
-    }
-
-    @Test
-    fun `power map is capitalized`() {
-        val result = mapper.map(snapshot)
-        assertEquals("Enduro", result.rideSettings.powerMap)
-    }
-
-    @Test
-    fun `session duration formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("1h 02m", result.session.duration)
-    }
-
-    @Test
-    fun `session max speed formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("94.1 km/h", result.session.maxSpeed)
-    }
-
-    @Test
-    fun `session average speed calculated and formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("23.8 km/h", result.session.averageSpeed)
+        assertEquals("38 km", mapper.map(snapshot).battery.estimatedRange)
     }
 
     @Test
     fun `battery temperature formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("34.7°C", result.battery.temperatureC)
+        assertEquals("34.7°C", mapper.map(snapshot).battery.temperatureC)
+    }
+
+    @Test
+    fun `motor power formatted`() {
+        assertEquals("52.4 hp", mapper.map(snapshot).motor.power)
     }
 
     @Test
     fun `motor temperature formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("61.2°C", result.motor.temperatureC)
+        assertEquals("61.2°C", mapper.map(snapshot).motor.temperatureC)
+    }
+
+    @Test
+    fun `power map is capitalised`() {
+        assertEquals("Enduro", mapper.map(snapshot).rideSettings.powerMap)
     }
 
     @Test
     fun `ride settings max power formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("80.0 hp", result.rideSettings.maxPower)
+        assertEquals("80.0 hp", mapper.map(snapshot).rideSettings.maxPower)
     }
 
     @Test
     fun `ride settings engine braking formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("45%", result.rideSettings.engineBraking)
+        assertEquals("45%", mapper.map(snapshot).rideSettings.engineBraking)
     }
 
     @Test
     fun `ride settings regen formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("60%", result.rideSettings.regen)
+        assertEquals("60%", mapper.map(snapshot).rideSettings.regen)
+    }
+
+    @Test
+    fun `session duration formatted`() {
+        assertEquals("1h 02m", mapper.map(snapshot).session.duration)
     }
 
     @Test
     fun `session distance formatted`() {
-        val result = mapper.map(snapshot)
-        assertEquals("24.7 km", result.session.distance)
+        assertEquals("24.7 km", mapper.map(snapshot).session.distance)
     }
 
     @Test
-    fun `fault codes passed through`() {
-        val snapshotWithFaults = snapshot.copy(
-            diagnostics = snapshot.diagnostics.copy(faultCodes = listOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT")),
-        )
-        val result = mapper.map(snapshotWithFaults)
-        assertEquals(listOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT"), result.faultCodes)
+    fun `session max speed formatted`() {
+        assertEquals("94.1 km/h", mapper.map(snapshot).session.maxSpeed)
     }
 
     @Test
-    fun `empty fault codes maps to empty list`() {
-        val result = mapper.map(snapshot)
-        assertEquals(emptyList<String>(), result.faultCodes)
+    fun `session average speed calculated and formatted`() {
+        assertEquals("23.8 km/h", mapper.map(snapshot).session.averageSpeed)
     }
 
     @Test
@@ -218,6 +189,7 @@ class TelemetryUiMapperTest {
         assertEquals(1, result.warnings.size)
         assertEquals("W_MOT_TEMP_HIGH", result.warnings[0].code)
         assertEquals("Motor temperature high", result.warnings[0].message)
+        assertEquals("Warning", result.warnings[0].severity)
     }
 
     @Test
@@ -225,7 +197,19 @@ class TelemetryUiMapperTest {
         val snapshotNoWarnings = snapshot.copy(
             diagnostics = snapshot.diagnostics.copy(warnings = emptyList()),
         )
-        val result = mapper.map(snapshotNoWarnings)
-        assertEquals(emptyList<com.example.starkfuturetest.presentation.dashboard.WarningUiModel>(), result.warnings)
+        assertEquals(emptyList<WarningUiModel>(), mapper.map(snapshotNoWarnings).warnings)
+    }
+
+    @Test
+    fun `fault codes passed through`() {
+        val snapshotWithFaults = snapshot.copy(
+            diagnostics = snapshot.diagnostics.copy(faultCodes = listOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT")),
+        )
+        assertEquals(listOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT"), mapper.map(snapshotWithFaults).faultCodes)
+    }
+
+    @Test
+    fun `empty fault codes maps to empty list`() {
+        assertEquals(emptyList<String>(), mapper.map(snapshot).faultCodes)
     }
 }
