@@ -9,7 +9,7 @@ import com.example.starkfuturetest.domain.model.MotorInfo
 import com.example.starkfuturetest.domain.model.RideSettings
 import com.example.starkfuturetest.domain.model.SessionInfo
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
-import com.example.starkfuturetest.domain.repository.TelemetryRepository
+import com.example.starkfuturetest.data.repository.TelemetryRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

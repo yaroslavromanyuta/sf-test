@@ -7,7 +7,7 @@ import com.example.starkfuturetest.data.mapper.TelemetryDtoToDomainMapperImpl
 import com.example.starkfuturetest.data.parser.KotlinxTelemetryJsonParser
 import com.example.starkfuturetest.data.parser.TelemetryJsonParser
 import com.example.starkfuturetest.data.repository.TelemetryRepositoryImpl
-import com.example.starkfuturetest.domain.repository.TelemetryRepository
+import com.example.starkfuturetest.data.repository.TelemetryRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

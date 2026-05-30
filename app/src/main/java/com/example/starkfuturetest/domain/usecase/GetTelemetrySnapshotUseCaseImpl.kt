@@ -2,7 +2,7 @@ package com.example.starkfuturetest.domain.usecase
 
 import com.example.starkfuturetest.core.result.AppResult
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
-import com.example.starkfuturetest.domain.repository.TelemetryRepository
+import com.example.starkfuturetest.data.repository.TelemetryRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -6,7 +6,7 @@ import com.example.starkfuturetest.data.datasource.TelemetrySnapshotDataSource
 import com.example.starkfuturetest.data.mapper.TelemetryDtoToDomainMapper
 import com.example.starkfuturetest.data.parser.TelemetryJsonParser
 import com.example.starkfuturetest.domain.model.TelemetrySnapshot
-import com.example.starkfuturetest.domain.repository.TelemetryRepository
+import com.example.starkfuturetest.data.repository.TelemetryRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
