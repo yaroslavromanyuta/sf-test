@@ -5,9 +5,12 @@ Android technical assessment: a single-screen Jetpack Compose app that reads a s
 ## Build & Run
 
 ```bash
-./gradlew assembleDebug          # build APK
-./gradlew :app:testDebugUnitTest # run unit tests
-./gradlew :app:installDebug      # install on connected device/emulator
+./gradlew assembleDebug                    # build APK
+./gradlew :app:testDebugUnitTest           # run unit tests
+./gradlew connectedAndroidTest             # run instrumented UI tests (requires device/emulator)
+./gradlew :app:recordPaparazziDebug        # record Paparazzi screenshot golden images
+./gradlew :app:verifyPaparazziDebug        # verify screenshots against golden images
+./gradlew :app:installDebug                # install on connected device/emulator
 ```
 
 Minimum SDK: 26 · Target/Compile SDK: 36 · Java 17 · Kotlin 2.0.21
@@ -33,7 +36,7 @@ UI (Compose)
 | Layer | Package | Responsibility |
 |---|---|---|
 | Domain | `domain.model`, `domain.logic`, `domain.usecase` | Pure Kotlin models, business rules, use case interfaces |
-| Data | `data.*` | Asset reading, JSON parsing, mapping to domain |
+| Data | `data.*` | Repository interface + impl, asset reading, JSON parsing, mapping to domain |
 | Presentation | `presentation.dashboard` | UiState, UiModel, ViewModel, formatters |
 | UI | `ui.dashboard`, `ui.components` | Compose screens and reusable components |
 
@@ -54,6 +57,7 @@ Implements the Stark Future design system:
 - **Stark Red** `#E30613` as primary colour
 - Battery section shows a progress bar colour-coded by status: green (≥50%), amber (16–49%), red (0–15%)
 - Each telemetry section (`Battery`, `Performance`, `Ride Settings`, `Session`, `Warnings`) is independently expandable with animated visibility
+- Warning banner is hidden when there are no active warnings
 
 ## State Handling
 
@@ -66,15 +70,44 @@ Implements the Stark Future design system:
 
 ## Testing
 
-Unit tests cover all pure logic without Android framework dependencies:
+### JVM Unit Tests
 
 | Test class | What it covers |
 |---|---|
 | `BatteryStatusResolverTest` | Boundary checks for Critical / Medium / Healthy / Unknown |
 | `AverageSpeedCalculatorTest` | Normal case, zero/negative duration, zero distance |
 | `DurationFormatterTest` | Minutes-only and hours+minutes formatting |
+| `TelemetryValueFormatterImplTest` | Speed, power, temperature, percentage, range formatting |
+| `KotlinxTelemetryJsonParserTest` | Valid JSON, fault codes, warnings, unknown fields, invalid input |
+| `TelemetryDtoToDomainMapperImplTest` | DTO → domain model mapping, severity and status resolution |
+| `TelemetryRepositoryImplTest` | Success path, IOException/SerializationException error mapping, flow continuity |
+| `GetTelemetrySnapshotUseCaseImplTest` | Delegation to repository, error and multi-emission propagation |
 | `TelemetryUiMapperTest` | Full snapshot → UiModel mapping including formatters |
 | `TelemetryDashboardViewModelTest` | State transitions, toggle, theme change, retry (MockK + Turbine) |
+
+### JVM Integration Test
+
+| Test class | What it covers |
+|---|---|
+| `TelemetryDataPipelineTest` | Parser + mapper end-to-end: field mapping, warnings, fault codes, empty diagnostics |
+
+### Paparazzi Screenshot Tests (JVM)
+
+| Test class | What it covers |
+|---|---|
+| `ComponentScreenshotTest` | `WarningBanner` (single, multiple, empty) and `BatteryProgressIndicator` (healthy, medium, critical) |
+| `DashboardScreenshotTest` | All four screen states × dark/light theme; content variants (expanded, collapsed, critical battery) |
+
+Golden images are committed to `app/src/test/snapshots/images/`.
+
+### Instrumented UI Tests
+
+| Test class | What it covers |
+|---|---|
+| `TelemetryLoadingStateTest` | Loading message is displayed |
+| `TelemetryEmptyStateTest` | Empty state title and body text |
+| `TelemetryErrorStateTest` | Error title, message, Retry button and callback |
+| `TelemetryDashboardScreenTest` | Bike model, battery %, warning, expanded/collapsed sections, motor metrics, fault codes, max speed label, ride mode |
 
 ## Trade-offs & Notes
 
