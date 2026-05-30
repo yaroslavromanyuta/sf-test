@@ -6,8 +6,9 @@ object StarkColors {
     val StarkRed = Color(0xFFE30613)
     val StarkRedDark = Color(0xFF991B1B)
     val WarningAmber = Color(0xFFFBBF24)
+    val WarningAmberLight = Color(0xFF92400E)  // amber-800: 5.56:1 on tinted bg (WarningAmber is only 1.46:1)
     val SuccessGreen = Color(0xFF22C55E)
-    val SuccessGreenLight = Color(0xFF19832A)
+    val SuccessGreenLight = Color(0xFF166534)  // green-800: 6.54:1 on light bg (was #19832A at 4.46:1)
     val ErrorRed = Color(0xFFEF4444)
     val ErrorRedLight = Color(0xFFBA1A1A)
 
@@ -25,6 +26,6 @@ object StarkColors {
     val SurfaceContainerHighLight = Color(0xFFF0F0F0)
     val OnSurfaceLight = Color(0xFF121414)
     val OnSurfaceVariantLight = Color(0xFF4A4A4A)
-    val OutlineLight = Color(0xFFAF8782)
+    val OutlineLight = Color(0xFFA07470)  // darkened from #AF8782: 3.69:1 vs bg (was 2.91:1, below 3:1 for UI components)
     val OutlineVariantLight = Color(0xFFD1D1D1)
 }

@@ -11,8 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import com.example.starkfuturetest.R
 import com.example.starkfuturetest.presentation.dashboard.ThemeMode
@@ -35,6 +38,7 @@ fun ThemeSwitcher(
             val isSelected = mode == currentTheme
             val displayName = mode.displayName()
             val contentDescriptionValue = stringResource(R.string.cd_theme_option, displayName)
+            val selectedValue = stringResource(R.string.cd_theme_selected)
             Text(
                 text = displayName,
                 style = MaterialTheme.typography.labelLarge,
@@ -50,7 +54,9 @@ fun ThemeSwitcher(
                     .clickable { onThemeChange(mode) }
                     .padding(horizontal = StarkSpacing.md, vertical = StarkSpacing.sm)
                     .semantics {
+                        role = Role.Button
                         contentDescription = contentDescriptionValue
+                        stateDescription = if (isSelected) selectedValue else ""
                     },
             )
         }

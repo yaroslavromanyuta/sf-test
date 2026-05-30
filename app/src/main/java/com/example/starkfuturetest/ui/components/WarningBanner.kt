@@ -41,12 +41,18 @@ fun WarningBanner(
 
 @Composable
 private fun SingleWarningBanner(warning: WarningUiModel) {
+    val isCritical = warning.severity.equals("Critical", ignoreCase = true)
+    val isDark = MaterialTheme.colorScheme.background == StarkColors.BackgroundDark
+    val color = when {
+        isCritical -> if (isDark) StarkColors.StarkRed else StarkColors.ErrorRedLight
+        else -> if (isDark) StarkColors.WarningAmber else StarkColors.WarningAmberLight
+    }
     val shape = RoundedCornerShape(StarkSpacing.sm)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = StarkColors.WarningAmber.copy(alpha = 0.1f), shape = shape)
-            .border(width = 1.dp, color = StarkColors.WarningAmber.copy(alpha = 0.3f), shape = shape)
+            .background(color = color.copy(alpha = 0.1f), shape = shape)
+            .border(width = 1.dp, color = color.copy(alpha = 0.3f), shape = shape)
             .padding(StarkSpacing.md),
         horizontalArrangement = Arrangement.spacedBy(StarkSpacing.md),
         verticalAlignment = Alignment.Top,
@@ -54,13 +60,13 @@ private fun SingleWarningBanner(warning: WarningUiModel) {
         Icon(
             imageVector = Icons.Outlined.Warning,
             contentDescription = stringResource(R.string.cd_warning_icon),
-            tint = StarkColors.WarningAmber,
+            tint = color,
             modifier = Modifier.size(20.dp),
         )
         Text(
             text = warning.message,
             style = MaterialTheme.typography.titleMedium,
-            color = StarkColors.WarningAmber,
+            color = color,
         )
     }
 }

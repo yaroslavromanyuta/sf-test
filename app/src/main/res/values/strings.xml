@@ -47,6 +47,13 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="cd_theme_option">%1$s theme</string>
+    <string name="cd_theme_selected">Selected</string>
+
+    <!-- Battery progress indicator -->
+    <string name="cd_battery_indicator">Battery at %1$d%%, status: %2$s</string>
+
+    <!-- Fault codes -->
+    <string name="cd_fault_code">Fault code: %1$s</string>
 
     <!-- Content descriptions with format args -->
     <string name="cd_bike_image">%1$s motorcycle</string>
