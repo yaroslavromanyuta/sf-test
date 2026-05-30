@@ -13,7 +13,7 @@ Android technical assessment: a single-screen Jetpack Compose app that reads a s
 ./gradlew :app:installDebug                # install on connected device/emulator
 ```
 
-Minimum SDK: 26 · Target/Compile SDK: 36 · Java 17 · Kotlin 2.0.21
+Minimum SDK: 24 · Target/Compile SDK: 35 · Java 17 · Kotlin 2.3.21 · AGP 9.2.1 · Compose BOM 2025.01.00 · Hilt 2.59.2
 
 ## Architecture
 
@@ -111,7 +111,10 @@ Golden images are committed to `app/src/test/snapshots/images/`.
 
 ## Trade-offs & Notes
 
-- **Static asset only** — no network layer; the JSON is bundled in `assets/telemetry_snapshot.json`
+- **Local assets only** — no network layer; telemetry data is served from bundled JSON files in `assets/`. Three snapshots (`telemetry_snapshot.json`, `telemetry_snapshot_2.json`, `telemetry_snapshot_3.json`) are cycled every 15 seconds. This simulates future live-telemetry updates while staying within the static/local data constraint of the assessment.
+- **Flow-based repository** — `TelemetryRepository.getTelemetrySnapshotFlow()` returns a `Flow` rather than a one-shot suspend function. This is a deliberate forward-looking choice: the same interface can be backed by WebSocket or BLE without changing the use case or ViewModel. For the assessment it simply emits JSON snapshot emissions on a timer.
+- **Non-empty fault codes in `telemetry_snapshot.json`** — the main snapshot intentionally includes fault codes to exercise the diagnostics/warnings section of the UI. This is a deliberate extension beyond the minimal payload, not a misunderstanding of the task.
 - **`AppResult`** wraps all repository responses so the ViewModel never catches exceptions directly
+- **`AppError.EmptyData`** maps to `TelemetryDashboardUiState.Empty`, not `Error` — it signals a valid but empty payload, not a technical failure
 - **`DispatcherProvider`** is injected so coroutine dispatchers can be replaced in tests
 - Coil handles bike image loading; a graceful fallback gradient is always rendered underneath

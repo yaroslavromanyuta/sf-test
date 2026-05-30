@@ -63,7 +63,10 @@ class TelemetryDashboardViewModel @Inject constructor(
                             TelemetryDashboardUiState.Content(uiMapper.map(snapshot))
                         }
                     }
-                    is AppResult.Error -> TelemetryDashboardUiState.Error(errorMessage(result.error))
+                    is AppResult.Error -> when (result.error) {
+                        AppError.EmptyData -> TelemetryDashboardUiState.Empty
+                        else -> TelemetryDashboardUiState.Error(errorMessage(result.error))
+                    }
                 }
             }
         }

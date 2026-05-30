@@ -133,13 +133,13 @@ class TelemetryDashboardViewModelTest {
     }
 
     @Test
-    fun `empty data error emits Error state`() = runTest {
+    fun `empty data error emits Empty state`() = runTest {
         every { useCase() } returns flowOf(AppResult.Error(AppError.EmptyData))
 
         viewModel().uiState.test {
             skipItems(1)
             testDispatcher.scheduler.advanceUntilIdle()
-            assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
+            assertEquals(TelemetryDashboardUiState.Empty, awaitItem())
         }
     }
 
