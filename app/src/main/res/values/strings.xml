@@ -9,7 +9,6 @@
 
     <!-- Error state -->
     <string name="error_title">Failed to load telemetry</string>
-    <string name="error_body">%1$s</string>
     <string name="error_retry">Retry</string>
 
     <!-- Empty state -->
@@ -21,7 +20,6 @@
     <string name="section_performance">Performance</string>
     <string name="section_ride_settings">Ride Settings</string>
     <string name="section_session">Session</string>
-    <string name="section_warnings">Warnings</string>
     <string name="section_fault_codes">Fault Codes</string>
 
     <!-- Metric labels -->

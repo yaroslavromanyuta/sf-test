@@ -13,7 +13,7 @@ Android technical assessment: a single-screen Jetpack Compose app that reads a s
 ./gradlew :app:installDebug                # install on connected device/emulator
 ```
 
-Minimum SDK: 24 · Target/Compile SDK: 35 · Java 17 · Kotlin 2.3.21 · AGP 9.2.1 · Compose BOM 2025.01.00 · Hilt 2.59.2
+Minimum SDK: 24 · Target/Compile SDK: 37 · Java 17 · Kotlin 2.3.21 · AGP 9.2.1 · Compose BOM 2026.05.01 · Hilt 2.59.2
 
 ## Architecture
 

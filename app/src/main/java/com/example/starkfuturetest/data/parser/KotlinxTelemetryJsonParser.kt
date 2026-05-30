@@ -7,6 +7,6 @@ import javax.inject.Inject
 class KotlinxTelemetryJsonParser @Inject constructor(
     private val json: Json,
 ) : TelemetryJsonParser {
-    override fun parse(jsonString: String): TelemetrySnapshotDto =
-        json.decodeFromString(jsonString)
+    override fun parse(json: String): TelemetrySnapshotDto =
+        this@KotlinxTelemetryJsonParser.json.decodeFromString(json)
 }
