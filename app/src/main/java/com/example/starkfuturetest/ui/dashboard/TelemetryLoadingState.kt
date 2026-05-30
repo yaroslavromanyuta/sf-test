@@ -14,9 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.starkfuturetest.R
+import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.ui.theme.StarkSpacing
+import com.example.starkfuturetest.ui.theme.StarkTheme
 
 @Composable
 fun TelemetryLoadingState(modifier: Modifier = Modifier) {
@@ -40,4 +43,16 @@ fun TelemetryLoadingState(modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+@Preview(name = "Loading – Dark")
+@Composable
+private fun TelemetryLoadingStatePreviewDark() {
+    StarkTheme(ThemeMode.Dark) { TelemetryLoadingState() }
+}
+
+@Preview(name = "Loading – Light")
+@Composable
+private fun TelemetryLoadingStatePreviewLight() {
+    StarkTheme(ThemeMode.Light) { TelemetryLoadingState() }
 }

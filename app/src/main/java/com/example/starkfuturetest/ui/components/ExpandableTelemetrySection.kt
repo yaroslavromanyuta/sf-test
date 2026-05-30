@@ -25,8 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.starkfuturetest.R
+import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.ui.theme.StarkSpacing
+import com.example.starkfuturetest.ui.theme.StarkTheme
 
 @Composable
 fun StaticTelemetrySection(
@@ -117,5 +120,51 @@ fun ExpandableTelemetrySection(
                 expandedContent()
             }
         }
+    }
+}
+
+@Preview(name = "Section – Expanded")
+@Composable
+private fun ExpandableSectionExpandedPreview() {
+    StarkTheme(ThemeMode.Dark) {
+        ExpandableTelemetrySection(
+            title = "Session",
+            icon = {},
+            isExpanded = true,
+            onToggle = {},
+            expandedContent = {
+                Text(text = "94.1 km/h", style = MaterialTheme.typography.headlineSmall)
+            },
+        )
+    }
+}
+
+@Preview(name = "Section – Collapsed")
+@Composable
+private fun ExpandableSectionCollapsedPreview() {
+    StarkTheme(ThemeMode.Dark) {
+        ExpandableTelemetrySection(
+            title = "Session",
+            icon = {},
+            isExpanded = false,
+            onToggle = {},
+            expandedContent = {
+                Text(text = "94.1 km/h", style = MaterialTheme.typography.headlineSmall)
+            },
+        )
+    }
+}
+
+@Preview(name = "Static Section")
+@Composable
+private fun StaticSectionPreview() {
+    StarkTheme(ThemeMode.Dark) {
+        StaticTelemetrySection(
+            title = "Performance",
+            icon = {},
+            content = {
+                Text(text = "52.4 hp", style = MaterialTheme.typography.headlineSmall)
+            },
+        )
     }
 }

@@ -26,14 +26,21 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.starkfuturetest.R
+import com.example.starkfuturetest.domain.model.BatteryStatus
+import com.example.starkfuturetest.presentation.dashboard.BatteryUiModel
+import com.example.starkfuturetest.presentation.dashboard.MotorUiModel
+import com.example.starkfuturetest.presentation.dashboard.RideSettingsUiModel
+import com.example.starkfuturetest.presentation.dashboard.SessionUiModel
 import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardAction
 import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardUiModel
 import com.example.starkfuturetest.presentation.dashboard.TelemetrySectionId
 import com.example.starkfuturetest.presentation.dashboard.ThemeMode
+import com.example.starkfuturetest.presentation.dashboard.WarningUiModel
+import com.example.starkfuturetest.ui.theme.StarkTheme
 import com.example.starkfuturetest.ui.components.BatteryProgressIndicator
 import com.example.starkfuturetest.ui.components.BikeHeaderCard
 import com.example.starkfuturetest.ui.components.ExpandableTelemetrySection
@@ -54,10 +61,8 @@ fun TelemetryDashboardScreen(
     onAction: (TelemetryDashboardAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -78,7 +83,6 @@ fun TelemetryDashboardScreen(
                     containerColor = MaterialTheme.colorScheme.background,
                     scrolledContainerColor = MaterialTheme.colorScheme.surface,
                 ),
-                scrollBehavior = scrollBehavior,
             )
         },
         containerColor = MaterialTheme.colorScheme.background,
@@ -332,5 +336,45 @@ fun TelemetryDashboardScreen(
                 }
             }
         }
+    }
+}
+
+private val previewUiModel = TelemetryDashboardUiModel(
+    bikeModel = "Stark VARG MX 1.2",
+    variant = "Alpha",
+    firmwareVersion = "3.4.1",
+    formattedTimestamp = "2025-05-19 10:32",
+    imageUrl = "",
+    battery = BatteryUiModel(73, "73%", "Discharging", "38 km", "34.7°C", BatteryStatus.Healthy),
+    motor = MotorUiModel("52.4 hp", "61.2°C"),
+    rideSettings = RideSettingsUiModel("Enduro", "80.0 hp", "45%", "60%"),
+    session = SessionUiModel("1h 02m", "24.7 km", "94.1 km/h", "23.8 km/h"),
+    warnings = listOf(WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning")),
+    faultCodes = listOf("E_SENS_THROTTLE_OOR"),
+)
+
+@Preview(name = "Dashboard – Dark with warnings")
+@Composable
+private fun TelemetryDashboardScreenPreviewDark() {
+    StarkTheme(ThemeMode.Dark) {
+        TelemetryDashboardScreen(
+            data = previewUiModel,
+            expandedSections = setOf(TelemetrySectionId.Battery),
+            currentTheme = ThemeMode.Dark,
+            onAction = {},
+        )
+    }
+}
+
+@Preview(name = "Dashboard – Light no warnings")
+@Composable
+private fun TelemetryDashboardScreenPreviewLight() {
+    StarkTheme(ThemeMode.Light) {
+        TelemetryDashboardScreen(
+            data = previewUiModel.copy(warnings = emptyList(), faultCodes = emptyList()),
+            expandedSections = setOf(TelemetrySectionId.Battery),
+            currentTheme = ThemeMode.Light,
+            onAction = {},
+        )
     }
 }

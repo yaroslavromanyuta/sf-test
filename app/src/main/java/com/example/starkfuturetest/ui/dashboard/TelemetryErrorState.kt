@@ -19,10 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.starkfuturetest.R
+import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.ui.theme.StarkColors
 import com.example.starkfuturetest.ui.theme.StarkSpacing
+import com.example.starkfuturetest.ui.theme.StarkTheme
 
 @Composable
 fun TelemetryErrorState(
@@ -64,5 +67,21 @@ fun TelemetryErrorState(
                 Text(text = stringResource(R.string.error_retry))
             }
         }
+    }
+}
+
+@Preview(name = "Error – Dark")
+@Composable
+private fun TelemetryErrorStatePreviewDark() {
+    StarkTheme(ThemeMode.Dark) {
+        TelemetryErrorState(message = "Could not read telemetry data", onRetry = {})
+    }
+}
+
+@Preview(name = "Error – Light")
+@Composable
+private fun TelemetryErrorStatePreviewLight() {
+    StarkTheme(ThemeMode.Light) {
+        TelemetryErrorState(message = "Could not read telemetry data", onRetry = {})
     }
 }

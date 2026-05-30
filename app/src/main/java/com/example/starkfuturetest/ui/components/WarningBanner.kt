@@ -18,11 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.starkfuturetest.R
+import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.presentation.dashboard.WarningUiModel
 import com.example.starkfuturetest.ui.theme.StarkColors
 import com.example.starkfuturetest.ui.theme.StarkSpacing
+import com.example.starkfuturetest.ui.theme.StarkTheme
 
 @Composable
 fun WarningBanner(
@@ -59,5 +62,38 @@ private fun SingleWarningBanner(warning: WarningUiModel) {
             style = MaterialTheme.typography.titleMedium,
             color = StarkColors.WarningAmber,
         )
+    }
+}
+
+@Preview(name = "Warning – with warnings")
+@Composable
+private fun WarningBannerWithWarningsPreview() {
+    StarkTheme(ThemeMode.Dark) {
+        WarningBanner(
+            warnings = listOf(
+                WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
+            ),
+        )
+    }
+}
+
+@Preview(name = "Warning – multiple warnings")
+@Composable
+private fun WarningBannerMultiplePreview() {
+    StarkTheme(ThemeMode.Dark) {
+        WarningBanner(
+            warnings = listOf(
+                WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
+                WarningUiModel("W_BATT_LOW", "Battery critically low", "Critical"),
+            ),
+        )
+    }
+}
+
+@Preview(name = "Warning – empty")
+@Composable
+private fun WarningBannerEmptyPreview() {
+    StarkTheme(ThemeMode.Dark) {
+        WarningBanner(warnings = emptyList())
     }
 }

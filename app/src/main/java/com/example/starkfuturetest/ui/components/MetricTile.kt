@@ -8,7 +8,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.ui.theme.StarkSpacing
+import com.example.starkfuturetest.ui.theme.StarkTheme
 
 @Composable
 fun MetricTile(
@@ -29,5 +32,13 @@ fun MetricTile(
             style = valueStyle,
             color = MaterialTheme.colorScheme.onSurface,
         )
+    }
+}
+
+@Preview(name = "MetricTile – Dark")
+@Composable
+private fun MetricTilePreview() {
+    StarkTheme(ThemeMode.Dark) {
+        MetricTile(label = "Max Speed", value = "94.1 km/h")
     }
 }
