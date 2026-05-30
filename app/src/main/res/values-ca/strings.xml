@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Stark Future Test</string>
+
+    <string name="dashboard_title">Telemetria</string>
+
+    <string name="loading_message">Carregant telemetria…</string>
+
+    <string name="error_title">Error en carregar la telemetria</string>
+    <string name="error_retry">Torna a intentar-ho</string>
+
+    <string name="empty_title">Sense dades de telemetria</string>
+    <string name="empty_body">L\'snapshot no conté telemetria llegible.</string>
+
+    <string name="section_battery">Bateria</string>
+    <string name="section_performance">Rendiment</string>
+    <string name="section_ride_settings">Configuració de conducció</string>
+    <string name="section_session">Sessió</string>
+    <string name="section_fault_codes">Codis de fallada</string>
+
+    <string name="metric_estimated_range">Autonomia estimada</string>
+    <string name="metric_temperature">Temperatura</string>
+    <string name="metric_state">Estat</string>
+    <string name="metric_power">Potència</string>
+    <string name="metric_motor_temp">Temp. motor</string>
+    <string name="metric_power_map">Mapa de potència</string>
+    <string name="metric_max_power">Potència màx.</string>
+    <string name="metric_engine_braking">Fre motor</string>
+    <string name="metric_regen">Regeneració</string>
+    <string name="metric_duration">Durada</string>
+    <string name="metric_distance">Distància</string>
+    <string name="metric_max_speed">Velocitat màx.</string>
+    <string name="metric_avg_speed">Velocitat mitjana</string>
+
+    <string name="cd_warning_icon">Avís</string>
+
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Clar</string>
+    <string name="theme_dark">Fosc</string>
+    <string name="cd_theme_option">Tema %1$s</string>
+    <string name="cd_theme_selected">Seleccionat</string>
+
+    <string name="cd_battery_indicator">Bateria al %1$d%%, estat: %2$s</string>
+
+    <string name="cd_fault_code">Codi de fallada: %1$s</string>
+
+    <string name="cd_bike_image">Moto %1$s</string>
+    <string name="bike_header_variant_fw">%1$s · FW: %2$s</string>
+    <string name="cd_section_collapse">Replega %1$s</string>
+    <string name="cd_section_expand">Expandeix %1$s</string>
+
+    <string name="error_message_empty_data">No hi ha dades de telemetria disponibles</string>
+    <string name="error_message_parse_error">Error en processar l\'snapshot de telemetria</string>
+    <string name="error_message_asset_read">No s\'han pogut llegir les dades de telemetria</string>
+    <string name="error_message_unknown">S\'ha produït un error inesperat</string>
+
+    <string name="format_duration_hm">%1$dh %2$sm</string>
+    <string name="format_duration_m">%1$dm</string>
+
+    <string name="format_speed_kmh">%1$.1f km/h</string>
+    <string name="format_power_hp">%1$.1f hp</string>
+    <string name="format_temperature_c">%1$.1f°C</string>
+    <string name="format_distance_km">%1$.1f km</string>
+    <string name="format_range_km">%1$d km</string>
+    <string name="format_percentage">%1$d%%</string>
+</resources>

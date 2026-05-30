@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Stark Future Test</string>
+
+    <string name="dashboard_title">Télémétrie</string>
+
+    <string name="loading_message">Chargement de la télémétrie…</string>
+
+    <string name="error_title">Échec du chargement de la télémétrie</string>
+    <string name="error_retry">Réessayer</string>
+
+    <string name="empty_title">Aucune donnée de télémétrie</string>
+    <string name="empty_body">Le snapshot ne contient aucune télémétrie lisible.</string>
+
+    <string name="section_battery">Batterie</string>
+    <string name="section_performance">Performance</string>
+    <string name="section_ride_settings">Réglages de conduite</string>
+    <string name="section_session">Session</string>
+    <string name="section_fault_codes">Codes de défaut</string>
+
+    <string name="metric_estimated_range">Autonomie estimée</string>
+    <string name="metric_temperature">Température</string>
+    <string name="metric_state">État</string>
+    <string name="metric_power">Puissance</string>
+    <string name="metric_motor_temp">Temp. moteur</string>
+    <string name="metric_power_map">Carte de puissance</string>
+    <string name="metric_max_power">Puissance max.</string>
+    <string name="metric_engine_braking">Frein moteur</string>
+    <string name="metric_regen">Régénération</string>
+    <string name="metric_duration">Durée</string>
+    <string name="metric_distance">Distance</string>
+    <string name="metric_max_speed">Vitesse max.</string>
+    <string name="metric_avg_speed">Vitesse moy.</string>
+
+    <string name="cd_warning_icon">Avertissement</string>
+
+    <string name="theme_system">Système</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="cd_theme_option">Thème %1$s</string>
+    <string name="cd_theme_selected">Sélectionné</string>
+
+    <string name="cd_battery_indicator">Batterie à %1$d%%, état : %2$s</string>
+
+    <string name="cd_fault_code">Code de défaut : %1$s</string>
+
+    <string name="cd_bike_image">Moto %1$s</string>
+    <string name="bike_header_variant_fw">%1$s · FW : %2$s</string>
+    <string name="cd_section_collapse">Réduire %1$s</string>
+    <string name="cd_section_expand">Développer %1$s</string>
+
+    <string name="error_message_empty_data">Aucune donnée de télémétrie disponible</string>
+    <string name="error_message_parse_error">Échec de l\'analyse du snapshot de télémétrie</string>
+    <string name="error_message_asset_read">Impossible de lire les données de télémétrie</string>
+    <string name="error_message_unknown">Une erreur inattendue s\'est produite</string>
+
+    <string name="format_duration_hm">%1$dh %2$sm</string>
+    <string name="format_duration_m">%1$dm</string>
+
+    <string name="format_speed_kmh">%1$.1f km/h</string>
+    <string name="format_power_hp">%1$.1f hp</string>
+    <string name="format_temperature_c">%1$.1f°C</string>
+    <string name="format_distance_km">%1$.1f km</string>
+    <string name="format_range_km">%1$d km</string>
+    <string name="format_percentage">%1$d%%</string>
+</resources>
