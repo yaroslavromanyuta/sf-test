@@ -10,6 +10,7 @@ import com.example.starkfuturetest.ui.components.WarningBanner
 import com.example.starkfuturetest.ui.theme.StarkTheme
 import org.junit.Rule
 import org.junit.Test
+import kotlinx.collections.immutable.persistentListOf
 
 class ComponentScreenshotTest {
 
@@ -26,7 +27,7 @@ class ComponentScreenshotTest {
         paparazzi.snapshot {
             StarkTheme(ThemeMode.Dark) {
                 WarningBanner(
-                    warnings = listOf(
+                    warnings = persistentListOf(
                         WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
                     ),
                 )
@@ -39,7 +40,7 @@ class ComponentScreenshotTest {
         paparazzi.snapshot {
             StarkTheme(ThemeMode.Dark) {
                 WarningBanner(
-                    warnings = listOf(
+                    warnings = persistentListOf(
                         WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
                         WarningUiModel("W_BATT_CRITICAL", "Battery critically low", "Critical"),
                     ),
@@ -52,7 +53,7 @@ class ComponentScreenshotTest {
     fun warning_banner_empty() {
         paparazzi.snapshot {
             StarkTheme(ThemeMode.Dark) {
-                WarningBanner(warnings = emptyList())
+                WarningBanner(warnings = persistentListOf())
             }
         }
     }

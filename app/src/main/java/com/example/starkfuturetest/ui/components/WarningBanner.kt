@@ -25,11 +25,13 @@ import com.example.starkfuturetest.presentation.dashboard.ThemeMode
 import com.example.starkfuturetest.presentation.dashboard.WarningUiModel
 import com.example.starkfuturetest.ui.theme.StarkColors
 import com.example.starkfuturetest.ui.theme.StarkSpacing
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import com.example.starkfuturetest.ui.theme.StarkTheme
 
 @Composable
 fun WarningBanner(
-    warnings: List<WarningUiModel>,
+    warnings: ImmutableList<WarningUiModel>,
     modifier: Modifier = Modifier,
 ) {
     if (warnings.isNotEmpty()) {
@@ -76,7 +78,7 @@ private fun SingleWarningBanner(warning: WarningUiModel) {
 private fun WarningBannerWithWarningsPreview() {
     StarkTheme(ThemeMode.Dark) {
         WarningBanner(
-            warnings = listOf(
+            warnings = persistentListOf(
                 WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
             ),
         )
@@ -88,7 +90,7 @@ private fun WarningBannerWithWarningsPreview() {
 private fun WarningBannerMultiplePreview() {
     StarkTheme(ThemeMode.Dark) {
         WarningBanner(
-            warnings = listOf(
+            warnings = persistentListOf(
                 WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
                 WarningUiModel("W_BATT_LOW", "Battery critically low", "Critical"),
             ),
@@ -100,6 +102,6 @@ private fun WarningBannerMultiplePreview() {
 @Composable
 private fun WarningBannerEmptyPreview() {
     StarkTheme(ThemeMode.Dark) {
-        WarningBanner(warnings = emptyList())
+        WarningBanner(warnings = persistentListOf())
     }
 }

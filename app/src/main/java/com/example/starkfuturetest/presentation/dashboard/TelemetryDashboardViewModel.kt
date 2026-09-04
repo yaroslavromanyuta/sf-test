@@ -10,6 +10,8 @@ import com.example.starkfuturetest.domain.model.TelemetrySnapshot
 import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -49,10 +51,10 @@ class TelemetryDashboardViewModel @Inject constructor(
     private val _themeMode = MutableStateFlow(ThemeMode.Dark)
     val themeMode: StateFlow<ThemeMode> = _themeMode.asStateFlow()
 
-    private val _expandedSections = MutableStateFlow<Set<TelemetrySectionId>>(
-        setOf(TelemetrySectionId.Battery),
+    private val _expandedSections = MutableStateFlow<PersistentSet<TelemetrySectionId>>(
+        persistentSetOf(TelemetrySectionId.Battery),
     )
-    val expandedSections: StateFlow<Set<TelemetrySectionId>> = _expandedSections.asStateFlow()
+    val expandedSections: StateFlow<PersistentSet<TelemetrySectionId>> = _expandedSections.asStateFlow()
 
     fun onAction(action: TelemetryDashboardAction) {
         when (action) {
@@ -79,7 +81,7 @@ class TelemetryDashboardViewModel @Inject constructor(
 
     private fun toggleSection(sectionId: TelemetrySectionId) {
         _expandedSections.update { current ->
-            if (sectionId in current) current - sectionId else current + sectionId
+            if (sectionId in current) current.remove(sectionId) else current.add(sectionId)
         }
     }
 

@@ -53,12 +53,15 @@ import com.example.starkfuturetest.ui.components.ThemeSwitcher
 import com.example.starkfuturetest.ui.components.WarningBanner
 import com.example.starkfuturetest.ui.components.batteryStatusColor
 import com.example.starkfuturetest.ui.theme.StarkSpacing
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelemetryDashboardScreen(
     data: TelemetryDashboardUiModel,
-    expandedSections: Set<TelemetrySectionId>,
+    expandedSections: ImmutableSet<TelemetrySectionId>,
     currentTheme: ThemeMode,
     onAction: (TelemetryDashboardAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -353,8 +356,8 @@ private val previewUiModel = TelemetryDashboardUiModel(
     motor = MotorUiModel("52.4 hp", "61.2°C"),
     rideSettings = RideSettingsUiModel("Enduro", "80.0 hp", "45%", "60%"),
     session = SessionUiModel("1h 02m", "24.7 km", "94.1 km/h", "23.8 km/h"),
-    warnings = listOf(WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning")),
-    faultCodes = listOf("E_SENS_THROTTLE_OOR"),
+    warnings = persistentListOf(WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning")),
+    faultCodes = persistentListOf("E_SENS_THROTTLE_OOR"),
 )
 
 @Preview(name = "Dashboard – Dark with warnings")
@@ -363,7 +366,7 @@ private fun TelemetryDashboardScreenPreviewDark() {
     StarkTheme(ThemeMode.Dark) {
         TelemetryDashboardScreen(
             data = previewUiModel,
-            expandedSections = setOf(TelemetrySectionId.Battery),
+            expandedSections = persistentSetOf(TelemetrySectionId.Battery),
             currentTheme = ThemeMode.Dark,
             onAction = {},
         )
@@ -375,8 +378,8 @@ private fun TelemetryDashboardScreenPreviewDark() {
 private fun TelemetryDashboardScreenPreviewLight() {
     StarkTheme(ThemeMode.Light) {
         TelemetryDashboardScreen(
-            data = previewUiModel.copy(warnings = emptyList(), faultCodes = emptyList()),
-            expandedSections = setOf(TelemetrySectionId.Battery),
+            data = previewUiModel.copy(warnings = persistentListOf(), faultCodes = persistentListOf()),
+            expandedSections = persistentSetOf(TelemetrySectionId.Battery),
             currentTheme = ThemeMode.Light,
             onAction = {},
         )

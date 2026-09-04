@@ -1,6 +1,7 @@
 package com.example.starkfuturetest.presentation.dashboard
 
 import com.example.starkfuturetest.domain.model.BatteryStatus
+import kotlinx.collections.immutable.ImmutableList
 
 data class TelemetryDashboardUiModel(
     val bikeModel: String,
@@ -12,8 +13,8 @@ data class TelemetryDashboardUiModel(
     val motor: MotorUiModel,
     val rideSettings: RideSettingsUiModel,
     val session: SessionUiModel,
-    val warnings: List<WarningUiModel>,
-    val faultCodes: List<String>,
+    val warnings: ImmutableList<WarningUiModel>,
+    val faultCodes: ImmutableList<String>,
 )
 
 data class BatteryUiModel(

@@ -16,6 +16,7 @@ import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapper
 import io.mockk.every
 import io.mockk.verify
+import kotlinx.collections.immutable.persistentListOf
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,8 +63,8 @@ class TelemetryDashboardViewModelTest {
         motor = MotorUiModel("52.4 hp", "61.2°C"),
         rideSettings = RideSettingsUiModel("Enduro", "80 hp", "45%", "60%"),
         session = SessionUiModel("1h 02m", "24.7 km", "94.1 km/h", "23.8 km/h"),
-        warnings = emptyList(),
-        faultCodes = emptyList(),
+        warnings = persistentListOf(),
+        faultCodes = persistentListOf(),
     )
 
     @Before

@@ -18,6 +18,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.persistentListOf
 
 class DashboardScreenshotTest {
 
@@ -99,7 +101,7 @@ class DashboardScreenshotTest {
             StarkTheme(ThemeMode.Dark) {
                 TelemetryDashboardScreen(
                     data = fakeDashboardUiModel,
-                    expandedSections = setOf(TelemetrySectionId.Battery),
+                    expandedSections = persistentSetOf(TelemetrySectionId.Battery),
                     currentTheme = ThemeMode.Dark,
                     onAction = {},
                 )
@@ -113,7 +115,7 @@ class DashboardScreenshotTest {
             StarkTheme(ThemeMode.Dark) {
                 TelemetryDashboardScreen(
                     data = fakeDashboardUiModel,
-                    expandedSections = emptySet(),
+                    expandedSections = persistentSetOf(),
                     currentTheme = ThemeMode.Dark,
                     onAction = {},
                 )
@@ -126,8 +128,8 @@ class DashboardScreenshotTest {
         paparazzi.snapshot {
             StarkTheme(ThemeMode.Dark) {
                 TelemetryDashboardScreen(
-                    data = fakeDashboardUiModel.copy(warnings = emptyList(), faultCodes = emptyList()),
-                    expandedSections = setOf(TelemetrySectionId.Battery),
+                    data = fakeDashboardUiModel.copy(warnings = persistentListOf(), faultCodes = persistentListOf()),
+                    expandedSections = persistentSetOf(TelemetrySectionId.Battery),
                     currentTheme = ThemeMode.Dark,
                     onAction = {},
                 )
@@ -141,7 +143,7 @@ class DashboardScreenshotTest {
             StarkTheme(ThemeMode.Dark) {
                 TelemetryDashboardScreen(
                     data = fakeDashboardUiModelCritical,
-                    expandedSections = setOf(TelemetrySectionId.Battery),
+                    expandedSections = persistentSetOf(TelemetrySectionId.Battery),
                     currentTheme = ThemeMode.Dark,
                     onAction = {},
                 )
@@ -157,7 +159,7 @@ class DashboardScreenshotTest {
             StarkTheme(ThemeMode.Light) {
                 TelemetryDashboardScreen(
                     data = fakeDashboardUiModel,
-                    expandedSections = setOf(TelemetrySectionId.Battery),
+                    expandedSections = persistentSetOf(TelemetrySectionId.Battery),
                     currentTheme = ThemeMode.Light,
                     onAction = {},
                 )
@@ -170,8 +172,8 @@ class DashboardScreenshotTest {
         paparazzi.snapshot {
             StarkTheme(ThemeMode.Light) {
                 TelemetryDashboardScreen(
-                    data = fakeDashboardUiModel.copy(warnings = emptyList(), faultCodes = emptyList()),
-                    expandedSections = setOf(TelemetrySectionId.Battery),
+                    data = fakeDashboardUiModel.copy(warnings = persistentListOf(), faultCodes = persistentListOf()),
+                    expandedSections = persistentSetOf(TelemetrySectionId.Battery),
                     currentTheme = ThemeMode.Light,
                     onAction = {},
                 )

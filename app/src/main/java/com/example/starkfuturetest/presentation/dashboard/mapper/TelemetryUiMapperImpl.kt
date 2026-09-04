@@ -11,6 +11,7 @@ import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardUiMo
 import com.example.starkfuturetest.presentation.dashboard.WarningUiModel
 import com.example.starkfuturetest.presentation.dashboard.formatter.DurationFormatter
 import com.example.starkfuturetest.presentation.dashboard.formatter.TelemetryValueFormatter
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 
 class TelemetryUiMapperImpl @Inject constructor(
@@ -62,8 +63,8 @@ class TelemetryUiMapperImpl @Inject constructor(
                     message = warning.message,
                     severity = warning.severity.name,
                 )
-            },
-            faultCodes = snapshot.diagnostics.faultCodes,
+            }.toImmutableList(),
+            faultCodes = snapshot.diagnostics.faultCodes.toImmutableList(),
         )
     }
 }
