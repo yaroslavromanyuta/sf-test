@@ -15,6 +15,7 @@ import com.example.starkfuturetest.domain.model.TelemetrySnapshot
 import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapper
 import io.mockk.every
+import io.mockk.verify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -182,12 +183,29 @@ class TelemetryDashboardViewModelTest {
         every { uiMapper.map(any()) } returns fakeUiModel
 
         val vm = viewModel()
-        testDispatcher.scheduler.advanceUntilIdle()
-        assertTrue(vm.uiState.value is TelemetryDashboardUiState.Error)
+        vm.uiState.test {
+            skipItems(1) // Loading
+            testDispatcher.scheduler.advanceUntilIdle()
+            assertTrue(awaitItem() is TelemetryDashboardUiState.Error)
 
-        vm.onAction(TelemetryDashboardAction.Retry)
+            vm.onAction(TelemetryDashboardAction.Retry)
+            testDispatcher.scheduler.advanceUntilIdle()
+            assertEquals(TelemetryDashboardUiState.Loading, awaitItem())
+            assertTrue(awaitItem() is TelemetryDashboardUiState.Content)
+        }
+    }
+
+    @Test
+    fun `upstream is not collected while there are no subscribers`() = runTest {
+        every { useCase() } returns flowOf(AppResult.Success(fakeSnapshot))
+        every { uiMapper.map(any()) } returns fakeUiModel
+
+        val vm = viewModel()
         testDispatcher.scheduler.advanceUntilIdle()
-        assertTrue(vm.uiState.value is TelemetryDashboardUiState.Content)
+
+        // WhileSubscribed: without a collector the use case must never run.
+        assertEquals(TelemetryDashboardUiState.Loading, vm.uiState.value)
+        verify(exactly = 0) { useCase() }
     }
 
     @Test
