@@ -7,6 +7,7 @@ import com.example.starkfuturetest.presentation.dashboard.RideSettingsUiModel
 import com.example.starkfuturetest.presentation.dashboard.SessionUiModel
 import com.example.starkfuturetest.presentation.dashboard.TelemetryDashboardUiModel
 import com.example.starkfuturetest.presentation.dashboard.WarningUiModel
+import kotlinx.collections.immutable.persistentListOf
 
 internal val fakeDashboardUiModel = TelemetryDashboardUiModel(
     bikeModel = "Stark VARG MX 1.2",
@@ -35,10 +36,10 @@ internal val fakeDashboardUiModel = TelemetryDashboardUiModel(
         maxSpeed = "94.1 km/h",
         averageSpeed = "23.8 km/h",
     ),
-    warnings = listOf(
+    warnings = persistentListOf(
         WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
     ),
-    faultCodes = listOf("E_SENS_THROTTLE_OOR"),
+    faultCodes = persistentListOf("E_SENS_THROTTLE_OOR"),
 )
 
 internal val fakeDashboardUiModelCritical = fakeDashboardUiModel.copy(
@@ -48,9 +49,9 @@ internal val fakeDashboardUiModelCritical = fakeDashboardUiModel.copy(
         batteryStatus = BatteryStatus.Critical,
         estimatedRange = "3 km",
     ),
-    warnings = listOf(
+    warnings = persistentListOf(
         WarningUiModel("W_BATT_CRITICAL", "Battery critically low", "Critical"),
         WarningUiModel("W_MOT_TEMP_HIGH", "Motor temperature elevated", "Warning"),
     ),
-    faultCodes = listOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT"),
+    faultCodes = persistentListOf("E_SENS_THROTTLE_OOR", "E_CAN_BUS_TIMEOUT"),
 )

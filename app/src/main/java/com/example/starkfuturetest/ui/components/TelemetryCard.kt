@@ -3,7 +3,6 @@ package com.example.starkfuturetest.ui.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -22,7 +21,6 @@ fun TelemetryCard(
     val shape = RoundedCornerShape(StarkSpacing.sm)
     Card(
         modifier = modifier
-            .fillMaxWidth()
             .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = shape),
         shape = shape,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),

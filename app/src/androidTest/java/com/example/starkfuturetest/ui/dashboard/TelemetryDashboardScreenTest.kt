@@ -3,7 +3,7 @@ package com.example.starkfuturetest.ui.dashboard
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollToNodeAction
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -23,6 +23,9 @@ import com.example.starkfuturetest.ui.theme.StarkTheme
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.ImmutableSet
 
 @RunWith(AndroidJUnit4::class)
 class TelemetryDashboardScreenTest {
@@ -57,19 +60,19 @@ class TelemetryDashboardScreenTest {
             maxSpeed = "94.1 km/h",
             averageSpeed = "23.8 km/h",
         ),
-        warnings = listOf(
+        warnings = persistentListOf(
             WarningUiModel(
                 code = "W_MOT_TEMP_HIGH",
                 message = "Motor temperature elevated",
                 severity = "Warning",
             ),
         ),
-        faultCodes = emptyList(),
+        faultCodes = persistentListOf(),
     )
 
     private fun setContent(
         uiModel: TelemetryDashboardUiModel = fakeUiModel,
-        expandedSections: Set<TelemetrySectionId> = setOf(TelemetrySectionId.Battery),
+        expandedSections: ImmutableSet<TelemetrySectionId> = persistentSetOf(TelemetrySectionId.Battery),
         onAction: (TelemetryDashboardAction) -> Unit = {},
     ) {
         composeTestRule.setContent {
@@ -104,7 +107,7 @@ class TelemetryDashboardScreenTest {
 
     @Test
     fun warningBannerHiddenWhenNoWarnings() {
-        setContent(uiModel = fakeUiModel.copy(warnings = emptyList()))
+        setContent(uiModel = fakeUiModel.copy(warnings = persistentListOf()))
         composeTestRule.onNodeWithText("Motor temperature elevated").assertDoesNotExist()
     }
 
@@ -122,19 +125,19 @@ class TelemetryDashboardScreenTest {
 
     @Test
     fun expandedBatteryShowsEstimatedRange() {
-        setContent(expandedSections = setOf(TelemetrySectionId.Battery))
+        setContent(expandedSections = persistentSetOf(TelemetrySectionId.Battery))
         composeTestRule.onNodeWithText("38 km").assertIsDisplayed()
     }
 
     @Test
     fun expandedBatteryShowsTemperature() {
-        setContent(expandedSections = setOf(TelemetrySectionId.Battery))
+        setContent(expandedSections = persistentSetOf(TelemetrySectionId.Battery))
         composeTestRule.onNodeWithText("34.7°C").assertIsDisplayed()
     }
 
     @Test
     fun collapsedBatteryHidesExpandedContent() {
-        setContent(expandedSections = emptySet())
+        setContent(expandedSections = persistentSetOf())
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("38 km").assertDoesNotExist()
         composeTestRule.onNodeWithText("34.7°C").assertDoesNotExist()
@@ -144,7 +147,7 @@ class TelemetryDashboardScreenTest {
     fun batteryToggleActionFired() {
         var lastAction: TelemetryDashboardAction? = null
         setContent(
-            expandedSections = setOf(TelemetrySectionId.Battery),
+            expandedSections = persistentSetOf(TelemetrySectionId.Battery),
             onAction = { lastAction = it },
         )
         composeTestRule.onNodeWithContentDescription("Collapse Battery").performClick()
@@ -169,13 +172,13 @@ class TelemetryDashboardScreenTest {
 
     @Test
     fun faultCodesSectionHiddenWhenEmpty() {
-        setContent(uiModel = fakeUiModel.copy(faultCodes = emptyList()))
+        setContent(uiModel = fakeUiModel.copy(faultCodes = persistentListOf()))
         composeTestRule.onNodeWithText("Fault Codes").assertDoesNotExist()
     }
 
     @Test
     fun faultCodesSectionShownWhenNonEmpty() {
-        setContent(uiModel = fakeUiModel.copy(faultCodes = listOf("E_SENS_THROTTLE_OOR")))
+        setContent(uiModel = fakeUiModel.copy(faultCodes = persistentListOf("E_SENS_THROTTLE_OOR")))
         composeTestRule.onNode(hasScrollToNodeAction())
             .performScrollToNode(hasText("Fault Codes"))
         composeTestRule.onNodeWithText("Fault Codes").assertIsDisplayed()
@@ -184,8 +187,8 @@ class TelemetryDashboardScreenTest {
     @Test
     fun faultCodeValueIsDisplayed() {
         setContent(
-            uiModel = fakeUiModel.copy(faultCodes = listOf("E_SENS_THROTTLE_OOR")),
-            expandedSections = setOf(TelemetrySectionId.FaultCodes),
+            uiModel = fakeUiModel.copy(faultCodes = persistentListOf("E_SENS_THROTTLE_OOR")),
+            expandedSections = persistentSetOf(TelemetrySectionId.FaultCodes),
         )
         composeTestRule.onNode(hasScrollToNodeAction())
             .performScrollToNode(hasText("E_SENS_THROTTLE_OOR"))
@@ -194,7 +197,7 @@ class TelemetryDashboardScreenTest {
 
     @Test
     fun maxSpeedLabelIsDisplayed() {
-        setContent(expandedSections = setOf(TelemetrySectionId.Session))
+        setContent(expandedSections = persistentSetOf(TelemetrySectionId.Session))
         composeTestRule.onNode(hasScrollToNodeAction())
             .performScrollToNode(hasText("MAX SPEED"))
         composeTestRule.onNodeWithText("MAX SPEED").assertIsDisplayed()
@@ -202,7 +205,7 @@ class TelemetryDashboardScreenTest {
 
     @Test
     fun maxSpeedValueIsDisplayed() {
-        setContent(expandedSections = setOf(TelemetrySectionId.Session))
+        setContent(expandedSections = persistentSetOf(TelemetrySectionId.Session))
         composeTestRule.onNode(hasScrollToNodeAction())
             .performScrollToNode(hasText("94.1 km/h"))
         composeTestRule.onNodeWithText("94.1 km/h").assertIsDisplayed()
@@ -210,7 +213,7 @@ class TelemetryDashboardScreenTest {
 
     @Test
     fun rideModeIsDisplayed() {
-        setContent(expandedSections = setOf(TelemetrySectionId.RideSettings))
+        setContent(expandedSections = persistentSetOf(TelemetrySectionId.RideSettings))
         composeTestRule.onNode(hasScrollToNodeAction())
             .performScrollToNode(hasText("Enduro"))
         composeTestRule.onNodeWithText("Enduro").assertIsDisplayed()

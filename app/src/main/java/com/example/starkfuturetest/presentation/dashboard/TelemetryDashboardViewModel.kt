@@ -6,16 +6,25 @@ import com.example.starkfuturetest.R
 import com.example.starkfuturetest.core.resources.ResourcesRepository
 import com.example.starkfuturetest.core.result.AppError
 import com.example.starkfuturetest.core.result.AppResult
+import com.example.starkfuturetest.domain.model.TelemetrySnapshot
 import com.example.starkfuturetest.domain.usecase.GetTelemetrySnapshotUseCase
 import com.example.starkfuturetest.presentation.dashboard.mapper.TelemetryUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private const val SUBSCRIPTION_TIMEOUT_MS = 5_000L
 
 @HiltViewModel
 class TelemetryDashboardViewModel @Inject constructor(
@@ -24,57 +33,55 @@ class TelemetryDashboardViewModel @Inject constructor(
     private val resources: ResourcesRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<TelemetryDashboardUiState>(TelemetryDashboardUiState.Loading)
-    val uiState: StateFlow<TelemetryDashboardUiState> = _uiState.asStateFlow()
+    private val retryTrigger = MutableStateFlow(0)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiState: StateFlow<TelemetryDashboardUiState> = retryTrigger
+        .flatMapLatest {
+            getTelemetrySnapshotUseCase()
+                .map(::toUiState)
+                .onStart { emit(TelemetryDashboardUiState.Loading) }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(SUBSCRIPTION_TIMEOUT_MS),
+            initialValue = TelemetryDashboardUiState.Loading,
+        )
 
     private val _themeMode = MutableStateFlow(ThemeMode.Dark)
     val themeMode: StateFlow<ThemeMode> = _themeMode.asStateFlow()
 
-    private val _expandedSections = MutableStateFlow<Set<TelemetrySectionId>>(
-        setOf(TelemetrySectionId.Battery),
+    private val _expandedSections = MutableStateFlow<PersistentSet<TelemetrySectionId>>(
+        persistentSetOf(TelemetrySectionId.Battery),
     )
-    val expandedSections: StateFlow<Set<TelemetrySectionId>> = _expandedSections.asStateFlow()
-
-    private var telemetryJob: Job? = null
-
-    init {
-        collectTelemetry()
-    }
+    val expandedSections: StateFlow<PersistentSet<TelemetrySectionId>> = _expandedSections.asStateFlow()
 
     fun onAction(action: TelemetryDashboardAction) {
         when (action) {
-            is TelemetryDashboardAction.Retry -> collectTelemetry()
+            is TelemetryDashboardAction.Retry -> retryTrigger.update { it + 1 }
             is TelemetryDashboardAction.ToggleSection -> toggleSection(action.sectionId)
             is TelemetryDashboardAction.ChangeTheme -> _themeMode.value = action.themeMode
         }
     }
 
-    private fun collectTelemetry() {
-        telemetryJob?.cancel()
-        _uiState.value = TelemetryDashboardUiState.Loading
-        telemetryJob = viewModelScope.launch {
-            getTelemetrySnapshotUseCase().collect { result ->
-                _uiState.value = when (result) {
-                    is AppResult.Success -> {
-                        val snapshot = result.data
-                        if (snapshot.bike.model.isBlank()) {
-                            TelemetryDashboardUiState.Empty
-                        } else {
-                            TelemetryDashboardUiState.Content(uiMapper.map(snapshot))
-                        }
-                    }
-                    is AppResult.Error -> when (result.error) {
-                        AppError.EmptyData -> TelemetryDashboardUiState.Empty
-                        else -> TelemetryDashboardUiState.Error(errorMessage(result.error))
-                    }
-                }
+    private fun toUiState(result: AppResult<TelemetrySnapshot>): TelemetryDashboardUiState = when (result) {
+        is AppResult.Success -> {
+            val snapshot = result.data
+            if (snapshot.bike.model.isBlank()) {
+                TelemetryDashboardUiState.Empty
+            } else {
+                TelemetryDashboardUiState.Content(uiMapper.map(snapshot))
             }
+        }
+        is AppResult.Error -> when (result.error) {
+            AppError.EmptyData -> TelemetryDashboardUiState.Empty
+            else -> TelemetryDashboardUiState.Error(errorMessage(result.error))
         }
     }
 
     private fun toggleSection(sectionId: TelemetrySectionId) {
         _expandedSections.update { current ->
-            if (sectionId in current) current - sectionId else current + sectionId
+            if (sectionId in current) current.remove(sectionId) else current.add(sectionId)
         }
     }
 
