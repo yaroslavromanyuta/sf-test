@@ -104,6 +104,7 @@ fun TelemetryDashboardScreen(
         ) {
             item {
                 BikeHeaderCard(
+                    modifier = Modifier.fillMaxWidth(),
                     model = data.bikeModel,
                     variant = data.variant,
                     firmwareVersion = data.firmwareVersion,
@@ -113,11 +114,12 @@ fun TelemetryDashboardScreen(
             }
 
             item {
-                WarningBanner(warnings = data.warnings)
+                WarningBanner(warnings = data.warnings, modifier = Modifier.fillMaxWidth())
             }
 
             item {
                 ExpandableTelemetrySection(
+                    modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.section_battery),
                     icon = {
                         Icon(
@@ -178,6 +180,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 StaticTelemetrySection(
+                    modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.section_performance),
                     icon = {
                         Icon(
@@ -208,6 +211,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 ExpandableTelemetrySection(
+                    modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.section_ride_settings),
                     icon = {
                         Icon(
@@ -256,6 +260,7 @@ fun TelemetryDashboardScreen(
 
             item {
                 ExpandableTelemetrySection(
+                    modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.section_session),
                     icon = {
                         Icon(
@@ -305,6 +310,7 @@ fun TelemetryDashboardScreen(
             if (data.faultCodes.isNotEmpty()) {
                 item {
                     ExpandableTelemetrySection(
+                        modifier = Modifier.fillMaxWidth(),
                         title = stringResource(R.string.section_fault_codes),
                         icon = {
                             Icon(
