@@ -1,0 +1,8 @@
+package com.example.starkfuturetest.domain.model
+
+data class BikeInfo(
+    val model: String,
+    val variant: String,
+    val firmwareVersion: String,
+    val imageUrl: String,
+)
